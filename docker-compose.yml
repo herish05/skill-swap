@@ -1,0 +1,71 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: skill-swap-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  auth-service:
+    build: ./services/auth-service
+    container_name: auth-service
+    env_file:
+      - ./services/auth-service/.env
+    depends_on:
+      - mongo
+    ports:
+      - "4001:4001"
+  
+  user-service:
+    build: ./services/user-service
+    container_name: user-service
+    env_file:
+      - ./services/user-service/.env
+    depends_on:
+      - mongo
+    ports:
+      - "4002:4002"
+
+  skill-service:
+    build: ./services/skill-service
+    container_name: skill-service
+    env_file:
+      - ./services/skill-service/.env
+    depends_on:
+      - mongo
+    ports:
+      - "4003:4003"
+  swap-service:
+    build: ./services/swap-service
+    container_name: swap-service
+    env_file:
+      - ./services/swap-service/.env
+    depends_on:
+      - mongo
+    ports:
+      - "4004:4004"  
+  
+  notification-service:
+  build: ./services/notification-service
+  container_name: notification-service
+  env_file:
+    - ./services/notification-service/.env
+  depends_on:
+    - mongo
+  
+  api-gateway:
+    build: ./services/api-gateway
+    container_name: api-gateway
+    env_file:
+      - ./services/api-gateway/.env
+    depends_on:
+      - auth-service
+      - user-service
+    ports:
+      - "4000:4000"
+
+volumes:
+  mongo_data:
