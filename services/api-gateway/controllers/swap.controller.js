@@ -3,7 +3,7 @@ import axios from "axios";
 const SWAP_SERVICE_URL =
   process.env.SWAP_SERVICE_URL || "http://swap-service:4004";
 const NOTIFICATION_SERVICE_URL = process.env.NOTIFICATION_SERVICE_URL;
-
+const CHAT_SERVICE_URL=process.env.CHAT_SERVICE_URL ||"http://chat-service:4007"
 export const createSwap = async (req, res) => {
   try {
     const response = await axios.post(`${SWAP_SERVICE_URL}/`, req.body);
@@ -71,6 +71,13 @@ export const updateSwapStatus = async (req, res) => {
           receiverUserId: swap.receiverUserId
         }
       });
+      if (status === "ACCEPTED") {
+        await axios.post(`${CHAT_SERVICE_URL}/chats/rooms`, {
+          swapId: swap._id,
+          requesterUserId: swap.requesterUserId,
+          receiverUserId: swap.receiverUserId,
+        });
+      }
     }
     
     res.json(swap);

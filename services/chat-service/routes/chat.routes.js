@@ -1,0 +1,10 @@
+import express from "express";
+import { createChatRoom, getAllMessages, getOnlineUsers, getUnReadMessagesCount, markMessageAsRead } from "../controllers/chat.controller";
+import { authFirst } from "../middlewares/auth.middleware";
+const router = express.Router();
+router.get("/:swapId/messages", authFirst,getAllMessages);
+router.patch("/:swapId/read", authFirst,markMessageAsRead);
+router.get("/unread-count/:userId", authFirst,getUnReadMessagesCount);
+router.get("/online-users", authFirst,getOnlineUsers);
+router.post("/rooms", authFirst,createChatRoom);
+export default router;

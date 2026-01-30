@@ -56,6 +56,16 @@ services:
   depends_on:
     - mongo
   
+  chat-service:
+    build: ./services/chat-service
+    container_name: chat-service
+    env_file: 
+      - ./services/chat-service/.env
+    ports:
+      - "4007:4007"
+    depends_on:
+      - mongo
+  
   api-gateway:
     build: ./services/api-gateway
     container_name: api-gateway

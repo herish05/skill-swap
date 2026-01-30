@@ -6,12 +6,13 @@ import userRoutes from "./routes/user.routes.js"
 import skillRoutes from "./routes/skill.routes.js"
 import swapRoutes from "./routes/swap.routes.js";
 import notificationRoutes from './routes/notification.routes.js';
+import { apiLimiter } from "./middlewares/ratelimiter.js";
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
+app.use(apiLimiter);
 app.use("/auth",authRoutes);
 app.use("/users",userRoutes)
 app.use("/skills",skillRoutes);
