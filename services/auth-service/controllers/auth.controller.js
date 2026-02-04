@@ -61,7 +61,6 @@ export const verifyEmailOtp = async (req, res) => {
 };
 export const login = async(req,res) =>{
     const {email,password} = req.body;
-    console.log(email,password);
     const user = await User.findOne({email});
     if(!user) {
         return res.status(401).json({message:"Invalid credentials"});
@@ -71,7 +70,14 @@ export const login = async(req,res) =>{
         return res.status(401).json({message:"Invalid credentials"});
     }
     if(!user.isEmailVerified) {
-        return res.status(403).json({message:"Email not verified"});
+        const newOtp = generateOtp();
+        user.otp = {
+          code: newOtp,
+          purpose: "email-verification",
+          expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+        };
+        await user.save();
+        return res.status(403).json({message:"Email not verified",requiredVerification:true,email:user.email});
     }
     const token = jwt.sign({userId:user._id,email:user.email},process.env.JWT_SECRET,{expiresIn:"1h"});
     user.lastLoginAt = new Date();

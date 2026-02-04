@@ -8,6 +8,7 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    
 
   auth-service:
     build: ./services/auth-service
@@ -49,12 +50,12 @@ services:
       - "4004:4004"  
   
   notification-service:
-  build: ./services/notification-service
-  container_name: notification-service
-  env_file:
-    - ./services/notification-service/.env
-  depends_on:
-    - mongo
+    build: ./services/notification-service
+    container_name: notification-service
+    env_file:
+      - ./services/notification-service/.env
+    depends_on:
+      - mongo
   
   chat-service:
     build: ./services/chat-service
