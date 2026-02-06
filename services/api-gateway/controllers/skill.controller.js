@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const SKILL_SERVICE_URL = process.env.SKILL_SERVICE_URL || "http://localhost:4003";
 
-export const addSkills = async(requestAnimationFrame,res)=>{
+export const addSkills = async(req,res)=>{
     try{
         const response = await axios.post(`${SKILL_SERVICE_URL}`,req.body);
         res.status(201).json(response.data);
@@ -43,5 +43,19 @@ export const deleteSkill = async(req,res)=>{
     .status(err?.response.status || 500)
     .json(err.response?.data || { error: "User not found" });
 
+    }
+}
+
+export const getMatches = async(req,res)=>{
+    try {
+        const response = await axios.get(`${SKILL_SERVICE_URL}/matches`,{
+            headers:{
+               Authorization:req.headers.authorization
+            }
+        });
+        return res.json(response.data);
+    } catch (err) {
+        console.log(err)
+         res.json(err.response?.data || { error: "Not matching skills" });
     }
 }

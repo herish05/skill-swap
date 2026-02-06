@@ -108,7 +108,7 @@ export default function Home() {
                 {open && (
                   <div className="absolute right-0 mt-2 w-40 bg-card border border-border rounded-xl shadow-lg p-2">
                     <Link
-                      href="/profile"
+                      href="/dashboard/profile"
                       className="block px-3 py-2 text-sm hover:bg-muted rounded-md"
                     >
                       Profile

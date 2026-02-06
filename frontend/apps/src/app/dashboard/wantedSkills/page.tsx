@@ -1,4 +1,3 @@
-
 "use client";
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
@@ -10,78 +9,84 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { getUserFromToken } from "@/app/lib/auth";
 import { createSkill, deleteSkill, getAllSkills } from "@/app/lib/skill.api";
 export default function SkillsPage() {
-	const [skills, setSkills] = useState<any[]>([]);
-	const [newSkill, setNewSkill] = useState("");
-	const [newLevel, setNewLevel] = useState("");
-	const [editingId, setEditingId] = useState<number | null>(null);
-	const [editSkill, setEditSkill] = useState("");
-	const [editLevel, setEditLevel] = useState("");
-	const [user,setUser] = useState<any>(null);
-	useEffect(()=>{
-		setUser(getUserFromToken());
-	},[])
-	const loadSkills = async()=>{
-		const res = await getAllSkills(user?.authUserId,user?.token||"",true);
-		// console.log(res)
-		setSkills(res);
-	}
-	useEffect(()=>{
-		if(!user)return;
-		loadSkills();
-	},[user])
-	
-	const addSkill = async() => {
-		if (!newSkill.trim() || !newLevel.trim()) return;
-		const skill = await createSkill(
-      	{
-        	authUserId: user?.authUserId,
-        	skillName: newSkill,
-        	level: newLevel.toUpperCase(),
-        	type: "OFFERED",
-			category:"General"
-      	},
-      	user?.token || "",
-    	);
-		setSkills((prev)=>[...prev,skill])
-		setNewSkill("");
-		setNewLevel("");
-	};
+  const [skills, setSkills] = useState<any[]>([]);
+  const [newSkill, setNewSkill] = useState("");
+  const [newLevel, setNewLevel] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editSkill, setEditSkill] = useState("");
+  const [editLevel, setEditLevel] = useState("");
+  const [user, setUser] = useState<any>(null);
+  useEffect(() => {
+    setUser(getUserFromToken());
+  }, []);
+  const loadSkills = async () => {
+    const res = await getAllSkills(user?.authUserId, user?.token || "",false);
+    // console.log(res)
+    setSkills(res);
+  };
+  useEffect(() => {
+    if (!user) return;
+    loadSkills();
+  }, [user]);
 
-	const removeSkill = async(id: string) => {
-		await deleteSkill(id,user?.token||"")
-		setSkills(skills.filter((s) => s._id != id));
-	};
+  const addSkill = async () => {
+    if (!newSkill.trim() || !newLevel.trim()) return;
+    const skill = await createSkill(
+      {
+        authUserId: user?.authUserId,
+        skillName: newSkill,
+        level: newLevel.toUpperCase(),
+        type: "WANTED",
+        category: "General",
+      },
+      user?.token || "",
+    );
+    setSkills((prev) => [...prev, skill]);
+    setNewSkill("");
+    setNewLevel("");
+  };
 
-	const startEdit = (skill: any) => {
-		setEditingId(skill._id);
-		setEditSkill(skill.skillName);
-		setEditLevel(skill.level);
-	};
+  const removeSkill = async (id: string) => {
+    await deleteSkill(id, user?.token || "");
+    setSkills(skills.filter((s) => s._id != id));
+  };
 
-	const saveEdit = (id: string) => {
-		setSkills(skills.map((s) => (s._id === id ? { ...s, skillName: editSkill, level: editLevel } : s)));
-		setEditingId(null);
-		setEditSkill("");
-		setEditLevel("");
-	};
+  const startEdit = (skill: any) => {
+    setEditingId(skill._id);
+    setEditSkill(skill.skillName);
+    setEditLevel(skill.level);
+  };
 
-	return (
+  const saveEdit = (id: string) => {
+    setSkills(
+      skills.map((s) =>
+        s._id === id ? { ...s, skillName: editSkill, level: editLevel } : s,
+      ),
+    );
+    setEditingId(null);
+    setEditSkill("");
+    setEditLevel("");
+  };
+
+  return (
     <ProtectedRoute>
       <DashboardLayout>
         <div className="max-w-2xl mx-auto p-8 space-y-8">
-          <h1 className="text-3xl font-bold mb-4">My Skills</h1>
+          <h1 className="text-3xl font-bold mb-4">Wanted Skills</h1>
           <Card className="p-6 space-y-4">
             <div className="flex gap-50">
               <div>Skill</div>
               <div>Level (e.g. Beginner, Intermediate, Advanced)</div>
             </div>
             <div className="flex gap-2">
+              {/* <label>Skill</label> */}
               <Input
                 placeholder="Skill name"
                 value={newSkill}
                 onChange={(e) => setNewSkill(e.target.value)}
                 className="w-1/2 border-2 border-amber-50"
               />
+              {/* <label>Level (e.g. Beginner, Intermediate, Advanced)</label> */}
               <Input
                 placeholder="Level (e.g. Beginner, Intermediate, Advanced)"
                 value={newLevel}

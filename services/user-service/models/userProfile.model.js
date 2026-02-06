@@ -20,7 +20,7 @@ const availabilitySchema = new mongoose.Schema({
 const ratingSchema = new mongoose.Schema({
     rating:{
         type:Number,
-        min:1,
+        min:3,
         max:5
     },
     review:String,
@@ -50,9 +50,7 @@ const userProfileSchema = new mongoose.Schema({
         maxlength:500
     },
     location :{
-        city:String,
-        state:String,
-        country:String
+        type:String
     },
     skillsOffered:[
         {

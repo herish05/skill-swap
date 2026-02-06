@@ -1,6 +1,6 @@
 import express from "express";
-import { createChatRoom, getAllMessages, getOnlineUsers, getUnReadMessagesCount, markMessageAsRead } from "../controllers/chat.controller";
-import { authFirst } from "../middlewares/auth.middleware";
+import { createChatRoom, getAllMessages, getOnlineUsers, getUnReadMessagesCount, markMessageAsRead } from "../controllers/chat.controller.js";
+import { authFirst } from "../middlewares/auth.middleware.js";
 const router = express.Router();
 router.get("/:swapId/messages", authFirst,getAllMessages);
 router.patch("/:swapId/read", authFirst,markMessageAsRead);

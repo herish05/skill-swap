@@ -5,6 +5,9 @@ import SkillCard from "@/components/SkillCard";
 import { GradientInput } from "@/components/ui/gradient-input";
 import { GradientButton } from "@/components/ui/gradient-button";
 import ProtectedRoute from "@/components/ProtectedRoutes";
+import { useEffect, useState } from "react";
+import { getUserFromToken } from "../lib/auth";
+import { getMatches } from "../lib/skill.api";
 const mockUsers = [
 	{
 		user: { name: "Sarah Chen", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah", rating: 4.9, reviews: 28 },
@@ -46,6 +49,26 @@ const stats = [
 ];
 
 export default function Dashboard() {
+  const [user,setUser] = useState<any>();
+
+
+  useEffect(()=>{
+    const u = getUserFromToken();
+    if(!u)return;
+    setUser(u);
+  },[])
+  useEffect(()=>{
+    const loadMatches = async()=>{
+      if(!user)return;
+      try {
+        const data = await getMatches(user.token);
+        console.log(data);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    loadMatches();
+  },[user])
 	return (
     <ProtectedRoute>
       <DashboardLayout>

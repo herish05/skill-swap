@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
   { icon: Sparkles, label: "My Skills", path: "/dashboard/skills" },
+  { icon: Sparkles, label: "Wanted Skills", path: "/dashboard/wantedSkills"},
   { icon: InboxIcon, label: "Requests", path: "/dashboard/requests" },
   { icon: MessageSquare, label: "Messages", path: "/dashboard/messages" },
   { icon: Video, label: "Video Calls", path: "/dashboard/video" },

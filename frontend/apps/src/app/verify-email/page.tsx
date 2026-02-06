@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { verifyOtp } from "../lib/auth.api";
-
+import AuthProtectedRoute from "@/components/AuthProtectedRoutes";
 export default function VerifyEmail() {
   const router = useRouter();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -63,44 +63,45 @@ export default function VerifyEmail() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-zinc-950 to-black p-6">
-      <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-10 shadow-xl">
-        <h1 className="text-3xl font-semibold text-white text-center mb-2">
-          Verify Email
-        </h1>
-        <p className="text-sm text-zinc-400 text-center mb-8">
-          Enter the 6-digit code sent to your email
-        </p>
+    <AuthProtectedRoute>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-zinc-950 to-black p-6">
+        <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-10 shadow-xl">
+          <h1 className="text-3xl font-semibold text-white text-center mb-2">
+            Verify Email
+          </h1>
+          <p className="text-sm text-zinc-400 text-center mb-8">
+            Enter the 6-digit code sent to your email
+          </p>
 
-        <div className="flex justify-center gap-4 mb-8">
-          {otp.map((digit, index) => (
-            <input
-              key={index}
-              ref={(el) => {
-                inputs.current[index] = el;
-              }}
-              type="text"
-              maxLength={1}
-              value={digit}
-              onChange={(e) => handleChange(e.target.value, index)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              className="w-14 h-16 text-center text-xl font-semibold 
+          <div className="flex justify-center gap-4 mb-8">
+            {otp.map((digit, index) => (
+              <input
+                key={index}
+                ref={(el) => {
+                  inputs.current[index] = el;
+                }}
+                type="text"
+                maxLength={1}
+                value={digit}
+                onChange={(e) => handleChange(e.target.value, index)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                className="w-14 h-16 text-center text-xl font-semibold 
                          bg-zinc-900 border border-zinc-700 rounded-xl 
                          text-white outline-none 
                          focus:border-white focus:ring-2 focus:ring-white/20 transition"
-            />
-          ))}
-        </div>
+              />
+            ))}
+          </div>
 
-        <button
-          className="w-full h-12 rounded-xl bg-white text-black font-medium hover:bg-gray-200 transition"
-          onClick={verifyEmailOtp}
-          disabled={loading}
-        >
-          {loading ? "Verifying..." : "Verify Account"}
-        </button>
-        
+          <button
+            className="w-full h-12 rounded-xl bg-white text-black font-medium hover:bg-gray-200 transition"
+            onClick={verifyEmailOtp}
+            disabled={loading}
+          >
+            {loading ? "Verifying..." : "Verify Account"}
+          </button>
+        </div>
       </div>
-    </div>
+    </AuthProtectedRoute>
   );
 }

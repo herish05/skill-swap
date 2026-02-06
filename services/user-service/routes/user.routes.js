@@ -3,6 +3,6 @@ import { createProfile,updateProfile,getProfile } from "../controllers/user.cont
 const router = express.Router();
 
 router.get("/profile/:authUserId",getProfile);
-router.post("/profile/:authUserId", updateProfile);
+router.put("/profile/:authUserId", updateProfile);
 router.post("/profile", createProfile);
 export default router;

@@ -5,8 +5,11 @@ import {
     addSkill,
     searchSkills,
     getUserSkills,
-    deleteUser
+    deleteUser,
+    getMatches
 } from '../controllers/skill.controller.js';
+import { authFirst } from "../middleware/authFirst.js";
+router.get("/matches",authFirst,getMatches);
 router.post('/',addSkill);
 router.get('/user/:authUserId',getUserSkills);
 router.get('/search',searchSkills);

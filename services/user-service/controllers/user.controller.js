@@ -22,7 +22,8 @@ export const getProfile = async(req,res)=>{
     const {authUserId} = req.params;
     const profile = await UserProfile.findOne({authUserId});
     if(!profile) {
-        return res.status(404).json({error:"Profile not found"});
+        console.log(profile);
+        return res.status(200).json(null);
     }
     res.json({profile})
 }

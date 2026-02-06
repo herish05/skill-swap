@@ -1,19 +1,21 @@
 {
   "name": "skill-swap",
   "version": "1.0.0",
-  "private":true,
+  "private": true,
   "workspaces": [
-	"apps/*",
-	"services/*",
-	"packages/*"
+    "apps/*",
+    "services/*",
+    "packages/*"
   ],
-
   "scripts": {
     "dev": "docker-compose-up",
-    "build":"docker-compose build"
+    "build": "docker-compose build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "jwt-decode": "^4.0.0"
+  }
 }
