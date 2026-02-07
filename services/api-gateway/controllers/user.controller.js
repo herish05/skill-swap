@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import FormData from "form-data"
 const USER_SERVICE = process.env.USER_SERVICE_URL || "http://localhost:4002";
 
 export const createProfile = async (req, res) => {

@@ -8,7 +8,6 @@ import swapRoutes from "./routes/swap.routes.js";
 import notificationRoutes from './routes/notification.routes.js';
 import { apiLimiter } from "./middlewares/ratelimiter.js";
 dotenv.config();
-
 const app = express();
 app.use(cors());
 app.use(express.json());

@@ -33,6 +33,14 @@ export const login = async (req, res) => {
       .json(error.response?.data || { error: "Login failed" });
   }
 };
+export const refreshToken = async(req,res)=>{
+  try {
+    const response = await axios.post(`${AUTH_SERVICE}/refresh`,req.body);
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({message:"Error in refresh token"})
+  }
+}
 export const requestPasswordReset = async(req,res)=>{
   try {
     const response = await axios.post(`${AUTH_SERVICE}/password-reset-request`,req.body);

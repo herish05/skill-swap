@@ -1,40 +1,34 @@
 const SERVICE_URL = process.env.SERVICE_URL;
+import { authFetch } from "./authFetch";
 export const getAllSkills = async(authUserId:string,token:string,flag:boolean)=>{
-    const res = await fetch(`http://localhost:4000/skills/user/${authUserId}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await res.json();
+    const data = await authFetch(
+      `http://localhost:4000/skills/user/${authUserId}`,
+      {
+        method: "GET",
+      },
+    );
+    // const data = await res.json();
     if(flag)return data.skills.filter((s:any)=>s.type === "OFFERED")
     return data.skills.filter((s:any)=>s.type === "WANTED")
 }
 export const createSkill = async(data:any,token:string)=>{
-    const res = await fetch(`http://localhost:4000/skills/`, {
+    return  await authFetch(`http://localhost:4000/skills/`, {
       method: "POST",
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify(data),
     });
-    return res.json();
+    // return res.json();
 }
 export const deleteSkill = async(id:string,token:string)=>{
-    await fetch(`http://localhost:4000/skills/${id}`, {
+    return await authFetch(`http://localhost:4000/skills/${id}`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
 }
 
 export const getMatches = async(token:string)=>{
-    const res = await fetch("http://localhost:4000/skills/matches",{
-        method:"GET",
-        headers:{
-            Authorization:`Bearer ${token}`,
-        },
+   const data = await authFetch("http://localhost:4000/skills/matches", {
+      method: "GET",
     });
-    if(!res.ok)throw new Error("Failed to fetch matches ")
-        return res.json();
+    // if(!res.ok)throw new Error("Failed to fetch matches ")
+    //     return res.json();
+    return data;
 }

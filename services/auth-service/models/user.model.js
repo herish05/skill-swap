@@ -28,6 +28,9 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    refreshToken:{
+        type:String
+    },
     provider:{
         type:String,
         enum:["LOCAL","GOOGLE","GITHUB"],

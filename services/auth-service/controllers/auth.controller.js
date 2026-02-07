@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
+import { generateAccessToken, generateRefreshToken } from "../utils/generateToken.js";
 
 const generateOtp = ()=>Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -79,12 +80,25 @@ export const login = async(req,res) =>{
         await user.save();
         return res.status(403).json({message:"Email not verified",requiredVerification:true,email:user.email});
     }
-    const token = jwt.sign({userId:user._id,email:user.email},process.env.JWT_SECRET,{expiresIn:"1h"});
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+    // const token = jwt.sign({userId:user._id,email:user.email},process.env.JWT_SECRET,{expiresIn:"1h"});
     user.lastLoginAt = new Date();
+    user.refreshToken=refreshToken;
     await user.save();
-    res.json({token});  
+    res.json({ accessToken, refreshToken });  
 }
-
+export const refreshToken = async(req,res)=>{
+  const {refreshToken} = req.body;
+  if(!refreshToken)return res.status(401).json({message:"No refresh token"});
+  const user = await User.findOne({refreshToken});
+  if(!user)return res.status(403).json({message:"Invalid refresh token"});
+  jwt.verify(refreshToken,process.env.REFRESH_SECRET,(err,decoded)=>{
+    if(err)return res.status(403).json({message:"Token expired"});
+    const newAccessToken = generateAccessToken(user);
+    res.json({accessToken:newAccessToken})
+  })
+}
 export const requestPasswordReset = async (req, res) => {
   const { email } = req.body;
 

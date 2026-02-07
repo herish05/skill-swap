@@ -24,8 +24,9 @@ export default function Login() {
 		} 
 		try {
 			 	const res = await loginUser({email,password});
-				const token = res.data.token;
-				localStorage.setItem("token",token);
+				const token = res.data.accessToken;
+				localStorage.setItem("token", token);
+        localStorage.setItem("refreshToken",res.data.refreshToken);
 				toast.success("Login Successfull 🚀")
 				router.push("/dashboard");
 		} catch (error:any) {

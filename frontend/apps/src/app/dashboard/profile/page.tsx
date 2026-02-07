@@ -23,6 +23,11 @@ export default function Profile() {
   const [email,setEmail] = useState("");
   const [skillsOffered, setOfferedSkills] = useState<any[]>([]);
   const [skillsWanted, setWantedSkills] = useState<any[]>([]);
+
+  const generateAvatar = (name:string)=>{
+    const seed = encodeURIComponent(name.trim());
+    return `https://api.dicebear.com/7.x/initials/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
+  }
   const initProfile = async () => {
     if (!user) return;
     const existingProfile = await getProfile(user.authUserId, user.token);
@@ -109,7 +114,11 @@ export default function Profile() {
     },
   ];
   const handleSave = async() => {
-    const res = await updateProfile(user.authUserId,formData,user.token);
+    const updateData = {
+      ...formData,
+      avatar:generateAvatar(formData.fullName)
+    }
+    const res = await updateProfile(user.authUserId,updateData,user.token);
     if(res)toast.success("Profile Updated")
     if(!res)toast.error("Profile not updated")
     setProfile(formData);
@@ -130,19 +139,29 @@ export default function Profile() {
             <Card className="p-6 border border-border">
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="flex flex-col items-center md:items-start gap-4">
-                  <div className="relative group">
+                  <div
+                    className="relative group"
+                  >
                     <Avatar className="h-32 w-32">
-                      <AvatarImage src={profile?.avatar} />
+                      <AvatarImage 
+                        src={
+                          profile?.avatar || generateAvatar(profile?.fullName || "User")
+                        }
+                      />
                       <AvatarFallback>
                         {profile?.fullName?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
+
                     {isEditing && (
-                      <button className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
                         <Upload size={20} className="text-white" />
-                      </button>
+                      </div>
                     )}
                   </div>
+
+                  {/* Hidden file input */}
+
                   <div className="text-center md:text-left">
                     {isEditing ? (
                       <Input
@@ -342,9 +361,14 @@ export default function Profile() {
                     />
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {skill.level === "BEGINNER" ? "25%" : skill.level ===
-                    "INTERMEDIATE" ? "50%" : skill.level === "ADVANCED" ? "75%"
-                    : "0%" }progress
+                    {skill.level === "BEGINNER"
+                      ? "25%"
+                      : skill.level === "INTERMEDIATE"
+                        ? "50%"
+                        : skill.level === "ADVANCED"
+                          ? "75%"
+                          : "0%"}
+                    progress
                   </p>
                 </Card>
               ))}

@@ -50,8 +50,8 @@ const stats = [
 
 export default function Dashboard() {
   const [user,setUser] = useState<any>();
-
-
+  const [matchData,setMatchData] = useState<any[]>([]);
+  const [loading,setLoading] = useState(true);
   useEffect(()=>{
     const u = getUserFromToken();
     if(!u)return;
@@ -62,13 +62,26 @@ export default function Dashboard() {
       if(!user)return;
       try {
         const data = await getMatches(user.token);
-        console.log(data);
+        if(Array.isArray(data)) {
+          setMatchData(data);
+        }else {
+          setMatchData([]);
+        }
+        
+        // console.log(data);
       } catch (error) {
         console.log(error)
+        setMatchData([])
+      }finally{
+        setLoading(false);
       }
     }
     loadMatches();
+    
   },[user])
+  const handleRequestSwap = (id:string,offeredSkillId:string,wantedSkillId:string)=>{
+
+  }
 	return (
     <ProtectedRoute>
       <DashboardLayout>
@@ -119,21 +132,33 @@ export default function Dashboard() {
           </div>
 
           {/* Skill cards grid */}
-          <div>
-            <h2 className="text-lg font-semibold mb-4">Recommended Matches</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {mockUsers.map((data, index) => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {loading ? (
+              <p>Finding best matches for you...</p>
+            ) : matchData.length === 0 ? (
+              <p>No matches yet. Add more skills to get matched.</p>
+            ) : (
+              matchData.map((data) => (
                 <SkillCard
-                  key={index}
-                  user={data.user}
+                  key={`${data.user.id}-${data.offeredSkillId}-${data.wantedSkillId}`}
+                  user={{
+                    name: data.user.name,
+                    avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${data.user.name}`,
+                    rating: data.user.rating,
+                    reviews: data.user.reviews,
+                  }}
                   skillOffered={data.skillOffered}
                   skillWanted={data.skillWanted}
                   onRequestSwap={() =>
-                    console.log("Request swap:", data.user.name)
+                    handleRequestSwap(
+                      data.user.id,
+                      data.offeredSkillId,
+                      data.wantedSkillId,
+                    )
                   }
                 />
-              ))}
-            </div>
+              ))
+            )}
           </div>
         </div>
       </DashboardLayout>
