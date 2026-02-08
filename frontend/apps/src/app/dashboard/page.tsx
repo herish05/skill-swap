@@ -10,7 +10,7 @@ import { getUserFromToken } from "../lib/auth";
 import { getMatches } from "../lib/skill.api";
 import { createSwap } from "../lib/swap.api";
 import { toast } from "sonner";
-import { getProfile } from "../lib/profile.api";
+import { useUser } from "@/context/userContext";
 // const mockUsers = [
 // 	{
 // 		user: { name: "Sarah Chen", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah", rating: 4.9, reviews: 28 },
@@ -52,39 +52,36 @@ const stats = [
 ];
 
 export default function Dashboard() {
-  const [user,setUser] = useState<any>();
+  const [userD,setUser] = useState<any>();
   const [matchData,setMatchData] = useState<any[]>([]);
-  const [profile,setProfile] = useState<any>();
   const [loading,setLoading] = useState(true);
+  
   useEffect(()=>{
     const u = getUserFromToken();
     if(!u)return;
     setUser(u);
   },[])
-  useEffect(()=>{
-    const loadMatches = async()=>{
-      if(!user)return;
+  useEffect(() => {
+    const loadMatches = async () => {
+      if (!userD) return;
       try {
-        const data = await getMatches(user.token);
-        // const profileData = await getProfile(user.authUserId,user.token);
-        // setProfile(profileData.profile);
-        if(Array.isArray(data)) {
+        const data = await getMatches(userD.token);
+        if (Array.isArray(data)) {
           setMatchData(data);
-        }else {
+        } else {
           setMatchData([]);
         }
-        
+
         // console.log(data);
       } catch (error) {
-        console.log(error)
-        setMatchData([])
-      }finally{
+        console.log(error);
+        setMatchData([]);
+      } finally {
         setLoading(false);
       }
-    }
+    };
     loadMatches();
-    
-  },[user])
+  }, [userD]);
   const handleRequestSwap = async(id:string,offeredSkillId:string,wantedSkillId:string)=>{
     try{
       await createSwap(id,offeredSkillId,wantedSkillId,"Hey ,want to swap?");
@@ -93,6 +90,7 @@ export default function Dashboard() {
       toast.error("Failed to send swap request")
     }
   }
+  const { user } = useUser();
 	return (
     <ProtectedRoute>
       <DashboardLayout>
@@ -100,7 +98,9 @@ export default function Dashboard() {
           {/* Welcome section */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold">Welcome back, {profile?.fullName || "User"}! 👋</h1>
+              <h1 className="text-2xl font-bold">
+                Welcome back, {user?.fullName || "User"}! 👋
+              </h1>
               <p className="text-muted-foreground">
                 Discover new skills to learn and share.
               </p>

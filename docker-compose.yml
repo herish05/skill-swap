@@ -20,6 +20,15 @@ services:
     ports:
       - "4001:4001"
   
+  email-service:
+    build: ./services/email-service
+    container_name: email-service
+    ports:
+      - "4010:4010"
+    env_file:
+      - ./services/email-service/.env
+    restart: always
+
   user-service:
     build: ./services/user-service
     container_name: user-service

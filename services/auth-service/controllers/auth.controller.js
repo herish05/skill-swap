@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/generateToken.js";
-
+import axios from "axios";
 const generateOtp = ()=>Math.floor(100000 + Math.random() * 900000).toString();
 
 export const healthCheck = (req,res)=>{
@@ -36,6 +36,10 @@ export const signup = async(req,res)=>{
       },
     });
     console.log("OTP for email verification :",otpCode)
+    await axios.post(`${process.env.EMAIL_SERVICE}/email/otp`, {
+      email,
+      otp: otpCode,
+    });
     res.status(201).json({message:"User registered.verify your email using otp."});
 }
 
@@ -57,7 +61,10 @@ export const verifyEmailOtp = async (req, res) => {
   user.isEmailVerified = true;
   user.otp = undefined;
   await user.save();
-
+  await axios.post(`${process.env.EMAIL_SERVICE}/email/welcome`,{
+    email,
+    name:email
+  });
   res.json({ message: "Email verified successfully" });
 };
 export const login = async(req,res) =>{
@@ -115,7 +122,10 @@ export const requestPasswordReset = async (req, res) => {
 
   await user.save();
   console.log("Password reset OTP:", otpCode);
-
+  await axios.post(`${process.env.EMAIL_SERVICE}/email/reset`,{
+    email,
+    otp:otpCode
+  });
   res.json({ message: "OTP sent for password reset" });
 };
 
