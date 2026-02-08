@@ -11,7 +11,7 @@ api.interceptors.request.use((config)=>{
 });
 
 export const apiFetch = async(endpoint:string,options:RequestInit={})=>{
-    const token = localStorage.getItem("tokne");
+    const token = localStorage.getItem("token");
     const res = await fetch(`${BASE_URL}${endpoint}`,{
         ...options,
         headers:{

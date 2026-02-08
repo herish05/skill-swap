@@ -17,7 +17,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       />
       
       <div className="lg:pl-64">
-        <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
+        <DashboardHeader onMenuClick={() => setSidebarOpen(true)}/>
         <main className="p-4 lg:p-6">
           {children}
         </main>

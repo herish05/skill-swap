@@ -1,5 +1,5 @@
 import UserProfile from '..//models/userProfile.model.js';
-
+import mongoose from 'mongoose';
 export const createProfile = async(req,res)=> {
     const {authUserId,fullName,bio,location} = req.body;
     if(!authUserId || !fullName) {
@@ -20,6 +20,9 @@ export const createProfile = async(req,res)=> {
 
 export const getProfile = async(req,res)=>{
     const {authUserId} = req.params;
+    if (!authUserId || !mongoose.Types.ObjectId.isValid(authUserId)) {
+      return res.status(400).json({ message: "Invalid user id" });
+    }
     const profile = await UserProfile.findOne({authUserId});
     if(!profile) {
         console.log(profile);

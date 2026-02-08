@@ -32,3 +32,7 @@ export const getMatches = async(token:string)=>{
     //     return res.json();
     return data;
 }
+
+export const getSkill = async(id:string,token:string)=>{
+  return await authFetch(`http://localhost:4000/skills/getSkill/${id}`);
+}

@@ -23,7 +23,7 @@ export default function Profile() {
   const [email,setEmail] = useState("");
   const [skillsOffered, setOfferedSkills] = useState<any[]>([]);
   const [skillsWanted, setWantedSkills] = useState<any[]>([]);
-
+  
   const generateAvatar = (name:string)=>{
     const seed = encodeURIComponent(name.trim());
     return `https://api.dicebear.com/7.x/initials/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
@@ -35,7 +35,7 @@ export default function Profile() {
       const newProfile = await createProfile(
         {
           authUserId: user.authUserId,
-          fullName: user.email.split("@")[0],
+          fullName:user.email.split("@")[0],
           bio: "",
           location: "",
           skillsOffered: [],
@@ -114,14 +114,26 @@ export default function Profile() {
     },
   ];
   const handleSave = async() => {
+    const newAvatar = generateAvatar(formData.fullName);
     const updateData = {
       ...formData,
-      avatar:generateAvatar(formData.fullName)
+      avatar:newAvatar
     }
     const res = await updateProfile(user.authUserId,updateData,user.token);
-    if(res)toast.success("Profile Updated")
+    if(res){
+      toast.success("Profile Updated")
+      setProfile((prev:any)=>({
+        ...prev,
+        ...formData,
+        avatar:newAvatar
+      }))
+      setFormData((prev:any)=>({
+        ...prev,
+        avatar:newAvatar
+      }))
+    }
     if(!res)toast.error("Profile not updated")
-    setProfile(formData);
+    // setProfile(formData);
     setIsEditing(false);
   };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

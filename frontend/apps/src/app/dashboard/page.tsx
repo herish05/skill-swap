@@ -8,38 +8,41 @@ import ProtectedRoute from "@/components/ProtectedRoutes";
 import { useEffect, useState } from "react";
 import { getUserFromToken } from "../lib/auth";
 import { getMatches } from "../lib/skill.api";
-const mockUsers = [
-	{
-		user: { name: "Sarah Chen", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah", rating: 4.9, reviews: 28 },
-		skillOffered: "UI/UX Design",
-		skillWanted: "React Development",
-	},
-	{
-		user: { name: "Michael Park", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael", rating: 4.7, reviews: 15 },
-		skillOffered: "Python",
-		skillWanted: "Graphic Design",
-	},
-	{
-		user: { name: "Emma Wilson", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emma", rating: 4.8, reviews: 42 },
-		skillOffered: "Photography",
-		skillWanted: "Video Editing",
-	},
-	{
-		user: { name: "David Lee", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=David", rating: 4.6, reviews: 19 },
-		skillOffered: "JavaScript",
-		skillWanted: "Data Science",
-	},
-	{
-		user: { name: "Lisa Anderson", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lisa", rating: 5.0, reviews: 8 },
-		skillOffered: "Content Writing",
-		skillWanted: "SEO",
-	},
-	{
-		user: { name: "James Miller", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=James", rating: 4.5, reviews: 33 },
-		skillOffered: "Music Production",
-		skillWanted: "Marketing",
-	},
-];
+import { createSwap } from "../lib/swap.api";
+import { toast } from "sonner";
+import { getProfile } from "../lib/profile.api";
+// const mockUsers = [
+// 	{
+// 		user: { name: "Sarah Chen", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah", rating: 4.9, reviews: 28 },
+// 		skillOffered: "UI/UX Design",
+// 		skillWanted: "React Development",
+// 	},
+// 	{
+// 		user: { name: "Michael Park", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael", rating: 4.7, reviews: 15 },
+// 		skillOffered: "Python",
+// 		skillWanted: "Graphic Design",
+// 	},
+// 	{
+// 		user: { name: "Emma Wilson", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emma", rating: 4.8, reviews: 42 },
+// 		skillOffered: "Photography",
+// 		skillWanted: "Video Editing",
+// 	},
+// 	{
+// 		user: { name: "David Lee", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=David", rating: 4.6, reviews: 19 },
+// 		skillOffered: "JavaScript",
+// 		skillWanted: "Data Science",
+// 	},
+// 	{
+// 		user: { name: "Lisa Anderson", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lisa", rating: 5.0, reviews: 8 },
+// 		skillOffered: "Content Writing",
+// 		skillWanted: "SEO",
+// 	},
+// 	{
+// 		user: { name: "James Miller", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=James", rating: 4.5, reviews: 33 },
+// 		skillOffered: "Music Production",
+// 		skillWanted: "Marketing",
+// 	},
+// ];
 
 const stats = [
 	{ icon: ArrowLeftRight, label: "Active Swaps", value: "12", color: "text-primary" },
@@ -51,6 +54,7 @@ const stats = [
 export default function Dashboard() {
   const [user,setUser] = useState<any>();
   const [matchData,setMatchData] = useState<any[]>([]);
+  const [profile,setProfile] = useState<any>();
   const [loading,setLoading] = useState(true);
   useEffect(()=>{
     const u = getUserFromToken();
@@ -62,6 +66,8 @@ export default function Dashboard() {
       if(!user)return;
       try {
         const data = await getMatches(user.token);
+        // const profileData = await getProfile(user.authUserId,user.token);
+        // setProfile(profileData.profile);
         if(Array.isArray(data)) {
           setMatchData(data);
         }else {
@@ -79,8 +85,13 @@ export default function Dashboard() {
     loadMatches();
     
   },[user])
-  const handleRequestSwap = (id:string,offeredSkillId:string,wantedSkillId:string)=>{
-
+  const handleRequestSwap = async(id:string,offeredSkillId:string,wantedSkillId:string)=>{
+    try{
+      await createSwap(id,offeredSkillId,wantedSkillId,"Hey ,want to swap?");
+      toast.success("Swap request send 🚀")
+    }catch(error) {
+      toast.error("Failed to send swap request")
+    }
   }
 	return (
     <ProtectedRoute>
@@ -89,7 +100,7 @@ export default function Dashboard() {
           {/* Welcome section */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold">Welcome back, Alex! 👋</h1>
+              <h1 className="text-2xl font-bold">Welcome back, {profile?.fullName || "User"}! 👋</h1>
               <p className="text-muted-foreground">
                 Discover new skills to learn and share.
               </p>

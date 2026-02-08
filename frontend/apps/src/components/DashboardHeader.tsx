@@ -1,12 +1,13 @@
 import { Bell, Menu, Search } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { GradientInput } from "@/components/ui/gradient-input";
-
+import { useUser } from "@/context/userContext";
 interface DashboardHeaderProps {
   onMenuClick: () => void;
 }
 
 const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
+  const {user} = useUser();
   return (
     <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 lg:px-6">
       {/* Left side */}
@@ -39,11 +40,11 @@ const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
         {/* Profile */}
         <div className="flex items-center gap-3 pl-3 border-l border-border">
           <div className="hidden sm:block text-right">
-            <p className="text-sm font-medium">Alex Johnson</p>
+            <p className="text-sm font-medium">{user?.fullName}</p>
             <p className="text-xs text-muted-foreground">Web Developer</p>
           </div>
           <Avatar className="h-9 w-9 ring-2 ring-primary/10">
-            <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex" />
+            <AvatarImage src={user?.avatar} />
             <AvatarFallback className="gradient-bg text-primary-foreground text-sm">
               AJ
             </AvatarFallback>

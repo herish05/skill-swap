@@ -40,7 +40,6 @@ export default function SignUp() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [formData, setFormData] = useState({
-		fullName: "",
 		email: "",
 		dateofbirth:"",
 		password: "",
@@ -88,15 +87,6 @@ export default function SignUp() {
 
           {/* Sign up form */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            <GradientInput
-              type="text"
-              placeholder="Full Name"
-              icon={<User size={20} />}
-              value={formData.fullName}
-              onChange={(e) => handleChange("fullName", e.target.value)}
-              required
-            />
-
             <GradientInput
               type="email"
               placeholder="Email address"

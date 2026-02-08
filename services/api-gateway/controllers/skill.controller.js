@@ -50,12 +50,25 @@ export const getMatches = async(req,res)=>{
     try {
         const response = await axios.get(`${SKILL_SERVICE_URL}/matches`,{
             headers:{
-               Authorization:req.headers.authorization
+               Authorization:req.headers.authorization,
+               "x-user-id":req.user.userId
             }
         });
         return res.json(response.data);
     } catch (err) {
         console.log(err)
          res.json(err.response?.data || { error: "Not matching skills" });
+    }
+}
+
+export const getSkill = async(req,res)=>{
+    try{
+        const response = await axios.get(
+          `${SKILL_SERVICE_URL}/getSkill/${req.params.id}`,
+        );
+        return res.json(response.data);
+    }catch(err) {
+         console.log(err);
+         res.json(err.response?.data || { error: "skill not found" });
     }
 }

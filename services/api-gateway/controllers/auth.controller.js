@@ -28,6 +28,7 @@ export const login = async (req, res) => {
     const response = await axios.post(`${AUTH_SERVICE}/login`, req.body);
     res.status(response.status).json(response.data);
   } catch (error) {
+    
     res
       .status(error.response?.status || 500)
       .json(error.response?.data || { error: "Login failed" });

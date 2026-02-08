@@ -24,13 +24,13 @@ export const authFetch = async (url: string, options: any = {}) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refreshToken }),
     });
-
     if (!refreshRes.ok) {
       logout();
       return;
     }
-
+    
     const data = await refreshRes.json();
+    console.log("Refresh token "+data);
     localStorage.setItem("token", data.accessToken);
     accessToken = data.accessToken;
     res = await makeRequest();

@@ -35,7 +35,9 @@ export const deleteUser = async(req,res) =>{
 }
 
 export const getMatches = async(req,res)=>{
-    const myId = new mongoose.Types.ObjectId(req.user.userId);
+  const userId = req.headers["x-user-id"];
+    const myId = new mongoose.Types.ObjectId(req.headers["x-user-id"]);
+    if(!myId)return res.status(401).json({message:"Unauthorized"});
     const mySkills = await Skill.find({authUserId:myId});
     const myOffered = mySkills.filter((s)=>s.type ==="OFFERED").map((s)=>s.skillName.toLowerCase().trim());
     const myWanted = mySkills
@@ -49,7 +51,7 @@ export const getMatches = async(req,res)=>{
           $match: {
             $expr: {
               $and: [
-                { $ne: [{ $toString: "$authUserId" }, req.user.userId] },
+                { $ne: [{ $toString: "$authUserId" }, userId] },
                 { $in: [{ $toLower: "$skillName" }, myWanted] },
                 { $eq: ["$type", "OFFERED"] },
               ],
@@ -118,4 +120,14 @@ export const getMatches = async(req,res)=>{
 
 res.json(response.filter(Boolean));
 
+}
+
+export const getSkillById = async(req,res)=>{
+  const {id} = req.params;
+  const data = await Skill.findOne({_id:id});
+  console.log(data);
+  if(!data) {
+   return res.status(404).json({message:"Skill not found"})
+  }
+  return res.status(200).json(data);
 }

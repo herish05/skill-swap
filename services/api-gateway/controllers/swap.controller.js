@@ -6,7 +6,9 @@ const NOTIFICATION_SERVICE_URL = process.env.NOTIFICATION_SERVICE_URL;
 const CHAT_SERVICE_URL=process.env.CHAT_SERVICE_URL ||"http://chat-service:4007"
 export const createSwap = async (req, res) => {
   try {
-    const response = await axios.post(`${SWAP_SERVICE_URL}/`, req.body);
+    const response = await axios.post(`${SWAP_SERVICE_URL}/`,req.body,{ 
+      headers:{"x-user-id":req.user.userId}
+    });
     const swap = response.data;
     await axios.post(`${NOTIFICATION_SERVICE_URL}/notification`,{
       userId:swap.receiverUserId,

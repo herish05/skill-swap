@@ -5,8 +5,8 @@ import SwapRequest from '../models/swap.model.js';
  */
 
 export const createSwap = async(req,res)=>{
+    const requesterUserId = req.headers["x-user-id"]
     const {
-        requesterUserId,
         receiverUserId,
         offeredSkillId,
         wantedSkillId,
