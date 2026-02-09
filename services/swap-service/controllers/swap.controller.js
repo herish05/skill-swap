@@ -1,5 +1,5 @@
 import SwapRequest from '../models/swap.model.js';
-
+import axios from "axios";
 /**
  * Create swap request
  */
@@ -54,19 +54,54 @@ export const getUserSwaps=async(req,res)=>{
 /**
  * update  swap status
  */
+export const getUserSwapsWithName = async(req,res)=>{
+    const {userId} = req.params;
+    const swaps = await SwapRequest.find({
+        $or:[
+            {receiverUserId:userId},
+            {requesterUserId:userId}
+        ]
+    });
+    const fullData = await Promise.all(
+        swaps.map(async(swap)=>{
+            const otherUserId = swap.requesterUserId === userId?swap.receiverUserId:swap.requesterUserId;
+            const offeredSkill = await axios.get(`http://skill-service:4003/getSkill/${swap.offeredSkillId}`);
+            const wantedSkill = await axios.get(
+              `http://skill-service:4003/getSkill/${swap.wantedSkillId}`,
+            );
+            const userDetails = await axios.get(`http://user-service:4002/profile/${otherUserId}`);
+            return {
+                id:swap._id,
+                status:swap.status,
+                message:swap.message,
+                createdAt:swap.createdAt,
+                receiverUserId:swap.receiverUserId,
+                requesterUserId:swap.requesterUserId,
+                offeredSkill:offeredSkill.data,
+                wantedSkill:wantedSkill.data,
+                otherUser:userDetails.data
+            }
+        })
+    )
+    res.json(fullData);
+}
 export const updateSwapStatus = async(req,res)=>{
     const {id} = req.params;
     const {status} = req.body;
-    if(!["ACCEPTED", "REJECTED", "CANCELLED"].includes(status)) {
-        return res.status(400).json({message:"Invalid status"})
+    const userId = req.headers["x-user-id"];
+
+    const swap = SwapRequest.findById(id);
+    if(!swap) return res.status(404).json({message:"Swap not found"});
+    if(swap.status === "CANCELLED") {
+        return res.status(409).json({message:"Request already cancelled"});
     }
-    const swap = await SwapRequest.findByIdAndUpdate(
-        id,
-        {status},
-        {new:true}
-    );
-    if(!swap) {
-        return res.status(404).json({message:"swap not found"})
+    if(status === "ACCCEPTED" && swap.receiverUserId !== userId) {
+        return res.status(403).json({message:"Only receiver can accept"});
     }
+    if(status === "CANCELLED" && swap.requesterUserId !== userId) {
+        return res.status(403).json({message:"Only requester can cancel"});
+    }
+    swap.status = status;
+    await swap.save();
     res.json(swap);
 }

@@ -91,3 +91,17 @@ export const updateSwapStatus = async (req, res) => {
       .json(error.response?.data || { message: "Swap service error" });
   }
 };
+
+export const getAllSwapData = async(req,res)=>{
+  try {
+    const {userId} = req.params;
+    const response = await axios.get(`${SWAP_SERVICE_URL}/user/${userId}/all`);
+    res.json(response.data);
+  } catch (error) {
+    console.error("Get swaps error:", error.message);
+
+    res
+      .status(error.response?.status || 500)
+      .json(error.response?.data || { message: "Swap service error" });
+  }
+}

@@ -9,9 +9,8 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProtectedRoute from "@/components/ProtectedRoutes";
 import { getUserFromToken } from "@/app/lib/auth";
-import { getAllSwaps, updateSwapStatus } from "@/app/lib/swap.api";
-import { getProfile } from "@/app/lib/profile.api";
-import { getAllSkills, getSkill } from "@/app/lib/skill.api";
+import {  getAllSwapsData, updateSwapStatus } from "@/app/lib/swap.api";
+import { toast } from "sonner";
 const requests = [
   {
     id: 1,
@@ -178,72 +177,47 @@ export default function Requests() {
     const u = getUserFromToken();
     if (u) setUser(u);
   }, []);
-
+  const load = async () => {
+    try {
+       const data = await getAllSwapsData(user.authUserId);
+       const uiSwaps = data.map((swap:any)=>({
+        id:swap.id,
+        requesterUserId:swap.requesterUserId,
+        status:swap.status.toLowerCase(),
+        message:swap.message,
+        date:timeAgo(swap.createdAt),
+        user:{
+          name:swap.otherUser.profile.fullName,
+          avatar:swap.otherUser.profile.avatar,
+          rating:swap.otherUser.profile.averageRating || 0,
+          reviews:swap.otherUser.profile.ratings?.length || 0
+        },
+        skillWanted:swap.wantedSkill.skillName,
+        skillOffered:swap.offeredSkill.skillName
+       }));
+       setSwaps(uiSwaps);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     if (!user) return;
-
-    const load = async () => {
-      const data = await getAllSwaps(user.authUserId);
-
-      const userIds = [
-        ...new Set(
-          data.flatMap((s: any) => [s.requesterUserId, s.receiverUserId]),
-        ),
-      ];
-      const skillIds = [
-        ...new Set(
-          data.flatMap((s: any) => [s.offeredSkillId, s.wantedSkillId]),
-        ),
-      ];
-
-      const profiles = await Promise.all(
-        userIds.map((id: any) => getProfile(id, user.token)),
-      );
-      const skills = await Promise.all(
-        skillIds.map((id: any) => getSkill(id, user.token)),
-      );
-
-      const profileMap = Object.fromEntries(
-        profiles.map((p: any) => [p.profile.authUserId, p]),
-      );
-      const skillMap = Object.fromEntries(skills.map((s: any) => [s._id, s]));
-
-      const uiSwaps = data.map((swap: any) => {
-        const otherUserId =
-          swap.requesterUserId === user.authUserId
-            ? swap.receiverUserId
-            : swap.requesterUserId;
-
-        return {
-          id: swap._id,
-          requesterUserId: swap.requesterUserId,
-          status: swap.status.toLowerCase(),
-          message: swap.message,
-          date: timeAgo(swap.createdAt),
-          user: {
-            name: profileMap[otherUserId]?.profile?.fullName || "Unknown",
-            avatar: profileMap[otherUserId]?.profile?.avatar,
-            rating: profileMap[otherUserId]?.profile?.rating || 0,
-            reviews: profileMap[otherUserId]?.profile?.reviews || 0,
-          },
-          skillWanted: skillMap[swap.wantedSkillId]?.skillName,
-          skillOffered: skillMap[swap.offeredSkillId]?.skillName,
-        };
-      });
-
-      setSwaps(uiSwaps);
-    };
-
     load();
   }, [user]);
 
   const handleAction = async (id: string, status: string) => {
-    await updateSwapStatus(id, status, user.token);
-    setSwaps((prev) =>
-      prev.map((s) =>
-        s.id === id ? { ...s, status: status.toLowerCase() } : s,
-      ),
-    );
+    try {
+      const res = await updateSwapStatus(id, status, user.token);
+      setSwaps((prev) =>
+        prev.map((s) =>
+          s.id === id ? { ...s, status: res.status.toLowerCase() } : s,
+        ),
+      );
+    } catch (error:any) {
+      const msg = error?.response?.data?.message || "Action failed";
+      toast.error(msg);
+      load();
+    }
   };
 
   const filtered =

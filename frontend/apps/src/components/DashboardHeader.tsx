@@ -2,6 +2,7 @@ import { Bell, Menu, Search } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { GradientInput } from "@/components/ui/gradient-input";
 import { useUser } from "@/context/userContext";
+import NotificationBell from "./NotificationBell";
 interface DashboardHeaderProps {
   onMenuClick: () => void;
 }
@@ -32,10 +33,11 @@ const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
       {/* Right side */}
       <div className="flex items-center gap-3">
         {/* Notifications */}
-        <button className="relative p-2 hover:bg-secondary rounded-lg transition-colors">
-          <Bell size={20} className="text-muted-foreground" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full" />
-        </button>
+        
+          {/* <Bell size={20} className="text-muted-foreground" /> */}
+          <NotificationBell/>
+          {/* <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full" /> */}
+        
 
         {/* Profile */}
         <div className="flex items-center gap-3 pl-3 border-l border-border">

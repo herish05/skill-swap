@@ -16,7 +16,11 @@ export const createSwap = async(id:string,offeredSkillId:string,wantedSkillId:st
 export const getAllSwaps = async(userId:string)=> {
     return await authFetch(`http://localhost:4000/swaps/user/${userId}`);
 }
-
+export const getAllSwapsData = async(userId:string)=>{
+    return await authFetch(
+      `http://localhost:4000/swaps/user/${userId}/all`,
+    );
+}
 export const updateSwapStatus = async(id:string,status:string,token:string)=>{
     return await authFetch(`http://localhost:4000/swaps/${id}/status`,{
         method:"PATCH",

@@ -9,12 +9,13 @@ interface SkillCardProps {
     rating: number;
     reviews: number;
   };
+  swapStatus:string
   skillOffered: string;
   skillWanted: string;
   onRequestSwap?: () => void;
 }
 
-const SkillCard = ({ user, skillOffered, skillWanted, onRequestSwap }: SkillCardProps) => {
+const SkillCard = ({ user, skillOffered, skillWanted, swapStatus,onRequestSwap }: SkillCardProps) => {
   return (
     <div className="bg-card rounded-2xl p-6 shadow-card hover:shadow-card-hover transition-all duration-300 border border-border group">
       {/* User info */}
@@ -22,7 +23,10 @@ const SkillCard = ({ user, skillOffered, skillWanted, onRequestSwap }: SkillCard
         <Avatar className="h-12 w-12 ring-2 ring-primary/10">
           <AvatarImage src={user.avatar} alt={user.name} />
           <AvatarFallback className="gradient-bg text-primary-foreground">
-            {user.name.split(" ").map((n) => n[0]).join("")}
+            {user.name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")}
           </AvatarFallback>
         </Avatar>
         <div>
@@ -57,9 +61,12 @@ const SkillCard = ({ user, skillOffered, skillWanted, onRequestSwap }: SkillCard
       {/* Action button */}
       <GradientButton
         className="w-full"
+        disabled={swapStatus === "PENDING" || swapStatus === "ACCEPTED"}
         onClick={onRequestSwap}
       >
-        Request Swap
+        {swapStatus === "PENDING" && "Request Sent"}
+        {swapStatus === "ACCEPTED" && "Swap Active"}
+        {!swapStatus && "Request Swap"}
       </GradientButton>
     </div>
   );

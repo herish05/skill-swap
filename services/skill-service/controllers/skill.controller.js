@@ -125,7 +125,6 @@ res.json(response.filter(Boolean));
 export const getSkillById = async(req,res)=>{
   const {id} = req.params;
   const data = await Skill.findOne({_id:id});
-  console.log(data);
   if(!data) {
    return res.status(404).json({message:"Skill not found"})
   }

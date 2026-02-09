@@ -11,6 +11,7 @@ import { getMatches } from "../lib/skill.api";
 import { createSwap } from "../lib/swap.api";
 import { toast } from "sonner";
 import { useUser } from "@/context/userContext";
+import { getAllSwaps } from "../lib/swap.api";
 // const mockUsers = [
 // 	{
 // 		user: { name: "Sarah Chen", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah", rating: 4.9, reviews: 28 },
@@ -55,7 +56,8 @@ export default function Dashboard() {
   const [userD,setUser] = useState<any>();
   const [matchData,setMatchData] = useState<any[]>([]);
   const [loading,setLoading] = useState(true);
-  
+  const [sentSwaps,setSentSwaps] = useState<any[]>([]);
+
   useEffect(()=>{
     const u = getUserFromToken();
     if(!u)return;
@@ -82,18 +84,54 @@ export default function Dashboard() {
     };
     loadMatches();
   }, [userD]);
+  useEffect(()=>{
+    const loadSwaps = async()=>{
+      if (!userD) return;
+      try {
+        const swaps = await getAllSwaps(userD.authUserId);
+        setSentSwaps(Array.isArray(swaps)?swaps:[]);
+      } catch (error) {
+        setSentSwaps([]);
+      }
+    }
+    loadSwaps();
+  },[userD])
+
+  const getSwapStatus = (receiverId:string,offeredSkillId:string,wantedSkillId:string)=>{
+    const swap = sentSwaps.find((s)=>
+      s.requesterUserId === userD.authUserId &&
+      s.receiverUserId === receiverId && 
+      s.offeredSkillId === offeredSkillId && 
+      s.wantedSkillId === wantedSkillId
+    );
+    return swap?.status || null;
+  }
   const handleRequestSwap = async(id:string,offeredSkillId:string,wantedSkillId:string)=>{
+    const status = getSwapStatus(id, offeredSkillId, wantedSkillId);
+    if (status === "PENDING") {
+      toast.error("You already sent this request");
+      return;
+    }
+    if (status === "ACCEPTED") {
+      toast.error("Swap already active. Start your session!");
+      return;
+    }
     try{
+      
       await createSwap(id,offeredSkillId,wantedSkillId,"Hey ,want to swap?");
       toast.success("Swap request send 🚀")
-    }catch(error) {
-      toast.error("Failed to send swap request")
+    }catch(error:any) {
+      if(error.response?.status === 409) {
+        toast.error("Swap request already exists");
+      }else {
+        toast.error("Failed to send swap request")
+      }
     }
   }
   const { user } = useUser();
 	return (
     <ProtectedRoute>
-      <DashboardLayout>
+      <DashboardLayout>net
         <div className="space-y-6 animate-fade-in">
           {/* Welcome section */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -149,8 +187,14 @@ export default function Dashboard() {
             ) : matchData.length === 0 ? (
               <p>No matches yet. Add more skills to get matched.</p>
             ) : (
-              matchData.map((data) => (
-                <SkillCard
+              matchData.map((data) => {
+                const status = getSwapStatus(
+                  data.user.id,
+                  data.offeredSkillId,
+                  data.wantedSkillId
+                );
+                console.log(status)
+                return (<SkillCard
                   key={`${data.user.id}-${data.offeredSkillId}-${data.wantedSkillId}`}
                   user={{
                     name: data.user.name,
@@ -160,6 +204,7 @@ export default function Dashboard() {
                   }}
                   skillOffered={data.skillOffered}
                   skillWanted={data.skillWanted}
+                  swapStatus = {status}
                   onRequestSwap={() =>
                     handleRequestSwap(
                       data.user.id,
@@ -167,8 +212,8 @@ export default function Dashboard() {
                       data.wantedSkillId,
                     )
                   }
-                />
-              ))
+                />)
+                  })
             )}
           </div>
         </div>
