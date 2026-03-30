@@ -1,251 +1,1631 @@
-🧠 Skill-Swap Platform — Microservices Based Application
-
-A scalable Skill-Swap Platform where users can offer skills they know and request skills they want to learn. The system intelligently finds mutual matches and enables users to connect and collaborate.
-
-Built using a Microservices Architecture to simulate real-world distributed systems.
-
-🚀 Features
-👤 User Features
-
-User Signup / Login (JWT Authentication)
-
-Add Offered Skills
-
-Add Wanted Skills
-
-Get Skill Matches
-
-View matched users
-
-Secure API communication
-
-🤝 Matching Logic
-
-Finds users where:
-
-Your offered skill = someone else's wanted skill
-
-Their offered skill = your wanted skill
-
-Mutual benefit = perfect skill exchange
-
-🏗 Architecture Features
-
-Fully Microservices-based
-
-Independent services with separate databases
-
-REST APIs
-
-Token-based authentication
-
-Scalable and loosely coupled design
-
-🧩 Microservices Architecture
-                ┌──────────────────┐
-                │   API Gateway    │
-                └────────┬─────────┘
-                         │
-     ┌───────────────────┼───────────────────┐
-     │                   │                   │
-┌──────────────┐  ┌──────────────┐   ┌──────────────┐
-│ Auth Service │  │ Skill Service│   │ Match Service│
-└──────────────┘  └──────────────┘   └──────────────┘
-        │                  │                   │
-   MongoDB DB         MongoDB DB          MongoDB DB
-
-🧠 Services Overview
-1️⃣ Auth Service
-
-Handles authentication and authorization.
-
-Responsibilities
-
-User Registration
-
-User Login
-
-Password Hashing
-
-JWT Token Generation
-
-Token Validation
-
-Tech
-
-Node.js
-
-Express.js
-
-MongoDB
-
-JWT
-
-bcrypt
-
-2️⃣ Skill Service
-
-Manages user skills.
-
-Responsibilities
-
-Add skills
-
-Separate OFFERED and WANTED
-
-Fetch skills of user
-
-Skill Types
-
-{
-  "skillName": "JavaScript",
-  "type": "OFFERED" | "WANTED",
-  "authUserId": "userId"
-}
-
-3️⃣ Match Service
-
-Core brain of the application.
-
-Responsibilities
-
-Fetch skills from Skill Service
-
-Match users based on:
-
-Offered ↔ Wanted
-
-Wanted ↔ Offered
-
-Return matched users
-
-⚙️ Tech Stack
-Layer	Technology
-Backend	Node.js, Express.js
-Database	MongoDB
-Auth	JWT, bcrypt
-Architecture	Microservices
-Communication	REST APIs
-Dev Tools	Postman, Docker (optional)
-🔐 Authentication Flow
-
-User logs in
-
-Auth Service returns JWT token
-
-Token is sent in headers:
-
-Authorization: Bearer <token>
-
-
-Services verify token before processing request
-
-🔄 API Flow Example (Matching)
-User → API Gateway → Match Service
-Match Service → Skill Service (get skills)
-Match Service → returns matched users
-
-📂 Project Structure (Example)
-skill-swap-platform/
-│
-├── auth-service/
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   └── server.js
-│
-├── skill-service/
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   └── server.js
-│
-├── user-service/
-│   ├── controllers/
-│   ├── services/
-│   ├── routes/
-│   └── server.js
-│── swap-service/
-│   ├── controllers/
-│   ├── services/
-│   ├── routes/
-│   └── server.js
-└── api-gateway/
-    └── server.js
-
-🛠 Installation & Setup
-1️⃣ Clone Repo
-git clone https://github.com/your-username/skill-swap-.git
-cd skill-swap-platform
-
-2️⃣ Install Dependencies (Each Service)
-cd auth-service
-npm install
-
-cd ../skill-service
-npm install
-
-cd ../match-service
-npm install
-
-3️⃣ Environment Variables
-
-Each service needs a .env file.
-
-Auth Service
-
-PORT=4001
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret_key
-
-
-Skill Service
-
-PORT=4003
-MONGO_URI=your_mongodb_uri
-
-
-user Service
-
-PORT=4002
-MONGO_URI=your_mongodb_uri
-
-4️⃣ Start Services
-
-Run each service separately:
-
-npm start
-
-📬 Important API Endpoints
-Auth Service
-Method	Endpoint	Description
-POST	/signup	Register user
-POST	/login	Login user
-Skill Service
-Method	Endpoint	Description
-POST	/skill	Add skill
-GET	/skill/my	Get my skills
-Match Service
-Method	Endpoint	Description
-GET	/match	Get skill matches
-🧠 Matching Logic (Core Idea)
-If:
-  User A Offered Skill == User B Wanted Skill
-AND
-  User B Offered Skill == User A Wanted Skill
-Then:
-  It's a MATCH ✅
-
-🔮 Future Improvements
-
-Real-time chat between matched users
-
-Skill rating system
-
-Skill verification badges
-
-Notifications system
-
-Docker & Kubernetes deployment
-
-API Gateway rate limiting
+<div align="left" style="position: relative;">
+<p align="center">
+<img src="https://skillicons.dev/icons?i=react,nextjs,nodejs,express,mongodb,docker,ts,tailwind"/>
+</p>
+<h1>SKILL-SWAP</h1>
+<p align="left">
+	<em>A microservices-based platform where users exchange knowledge by teaching and learning skills from each other.</em>
+</p>
+<p align="left">
+	<!-- Shields.io badges disabled, using skill icons. --></p>
+<p align="left">Built with the tools and technologies:</p>
+<p align="left">
+	<a href="https://skillicons.dev">
+		<img src="https://skillicons.dev/icons?i=css,docker,md">
+	</a></p>
+</div>
+<br clear="right">
+
+##  Table of Contents
+
+- [ Overview](#-overview)
+- [ Features](#-features)
+- [ Project Structure](#-project-structure)
+  - [ Project Index](#-project-index)
+- [ Getting Started](#-getting-started)
+  - [ Prerequisites](#-prerequisites)
+  - [ Installation](#-installation)
+  - [ Usage](#-usage)
+  - [ Testing](#-testing)
+- [ Project Roadmap](#-project-roadmap)
+- [ Contributing](#-contributing)
+- [ License](#-license)
+- [ Acknowledgments](#-acknowledgments)
+
+---
+
+##  Overview
+
+Skill-Swap is a full-stack microservices-based platform that enables users to exchange skills with one another. 
+Instead of paying for courses, users can teach what they know and learn what they want from other community members.
+
+The platform allows users to create profiles, list their skills, search for other users with desired expertise, 
+and initiate skill exchange requests. Once a request is accepted, users can communicate through real-time chat 
+and collaborate through video calls to conduct learning sessions.
+
+The system is built using a scalable **microservices architecture** where each service handles a specific domain 
+such as authentication, user profiles, skill management, communication, notifications, and swap management.
+
+The application is designed with production readiness in mind, supporting containerized deployment using Docker 
+and service orchestration via Docker Compose.
+
+---
+
+##  Features
+
+### Core Features
+
+🔐 **Secure Authentication**
+- Email/password authentication
+- Google OAuth login
+- JWT-based authorization
+
+👤 **User Profiles**
+- Create and manage user profiles
+- Add skills you can teach
+- Add skills you want to learn
+
+🔎 **Skill Discovery**
+- Search users by skill
+- Explore available skill providers
+- Smart filtering and matching
+
+🔁 **Skill Swap Requests**
+- Send skill exchange requests
+- Accept or reject requests
+- Manage active and completed swaps
+
+💬 **Real-time Chat**
+- Messaging between matched users
+- Persistent chat history
+- Online presence tracking
+
+🔔 **Notifications System**
+- Real-time notifications
+- Request updates
+- System alerts
+
+📧 **Email Service**
+- Email verification
+- Password reset emails
+- Platform notifications
+
+⚡ **API Gateway**
+- Centralized API routing
+- Authentication middleware
+- Rate limiting for security
+
+🐳 **Containerized Deployment**
+- Dockerized microservices
+- Easy deployment with Docker Compose
+- Scalable architecture for cloud deployment
+
+---
+
+##  Project Structure
+
+```sh
+└── skill-swap/
+    ├── README.md
+    ├── docker-compose.yml
+    ├── frontend
+    │   └── apps
+    ├── package-lock.json
+    ├── package.json
+    └── services
+        ├── api-gateway
+        ├── auth-service
+        ├── chat-service
+        ├── email-service
+        ├── notification-service
+        ├── skill-service
+        ├── swap-service
+        └── user-service
+```
+
+
+###  Project Index
+<details open>
+	<summary><b><code>SKILL-SWAP/</code></b></summary>
+	<details> <!-- __root__ Submodule -->
+		<summary><b>__root__</b></summary>
+		<blockquote>
+			<table>
+			<tr>
+				<td><b><a href='https://github.com/herish05/skill-swap/blob/master/package-lock.json'>package-lock.json</a></b></td>
+				<td><code>Dependency lock file automatically generated by npm to ensure consistent dependency versions across environments.</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/herish05/skill-swap/blob/master/package.json'>package.json</a></b></td>
+				<td><code>Defines project dependencies, scripts, and metadata required to manage the Skill-Swap platform services.</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/herish05/skill-swap/blob/master/docker-compose.yml'>docker-compose.yml</a></b></td>
+				<td><code>Defines and orchestrates all microservices containers including API gateway, authentication, chat, notifications, and database services.</code></td>
+			</tr>
+			</table>
+		</blockquote>
+	</details>
+	<details> <!-- services Submodule -->
+		<summary><b>services</b></summary>
+		<blockquote>
+			<details>
+				<summary><b>user-service</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/user-service/index.js'>index.js</a></b></td>
+						<td><code>Entry point for the user service responsible for managing user profiles, profile updates, and user-related operations.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/user-service/package.json'>package.json</a></b></td>
+						<td><code>Defines project dependencies, scripts, and metadata required to manage the Skill-Swap platform services.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/user-service/Dockerfile'>DockerFile</a></b></td>
+						<td><code>Configuration file used to build a Docker container for the service, ensuring consistent runtime environment and dependency setup.</code></td>
+					</tr>
+					</table>
+					<details>
+						<summary><b>controllers</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/user-service/controllers/user.controller.js'>user.controller.js</a></b></td>
+								<td><code>❯ Handles the business logic for user-related operations such as creating, retrieving, updating, and managing user profiles.</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>models</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/user-service/models/userProfile.model.js'>userProfile.model.js</a></b></td>
+								<td><code>Defines the MongoDB schema for storing user profile data including skills offered, skills wanted, and user information.</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>routes</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/user-service/routes/user.routes.js'>user.routes.js</a></b></td>
+								<td><code>Defines REST API endpoints for user profile management and profile-related operations.</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>utils</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/user-service/utils/age.util.js'>age.util.js</a></b></td>
+								<td><code>Utility function used to calculate a user's age from their date of birth.</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>db</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/user-service/db/mongo.js'>mongo.js</a></b></td>
+								<td><code>MongoDB connection configuration for the user service.</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>auth-service</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/auth-service/index.js'>index.js</a></b></td>
+						<td><code>Main entry point for authentication service handling login, signup, and token management.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/auth-service/package.json'>package.json</a></b></td>
+						<td><code>Defines project dependencies, scripts, and metadata required to manage the Skill-Swap platform services.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/auth-service/Dockerfile'>Dockerfile</a></b></td>
+						<td><code>Configuration file used to build a Docker container for the service, ensuring consistent runtime environment and dependency setup.</code></td>
+					</tr>
+					</table>
+					<details>
+						<summary><b>controllers</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/auth-service/controllers/auth.controller.js'>auth.controller.js</a></b></td>
+								<td><code>Handles the business logic for user-related operations such as creating, retrieving, updating, and managing user profiles.</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>models</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/auth-service/models/user.model.js'>auth.model.js</a></b></td>
+								<td><code>MongoDB schema defining authentication-related user data including email, password, and OAuth provider details. </code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>routes</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/auth-service/routes/auth.routes.js'>auth.routes.js</a></b></td>
+								<td><code>Defines REST API endpoints for user profile management and auth-related operations.</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>utils</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/auth-service/utils/age.util.js'>age.util.js</a></b></td>
+								<td><code>Utility function used to calculate a user's age from their date of birth.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/auth-service/utils/generateToken.js'>generateToken.js</a></b></td>
+								<td><code>Utility for generating JWT tokens used for user authentication and authorization.</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>db</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/auth-service/db/mongo.js'>mongo.js</a></b></td>
+								<td><code>MongoDB connection configuration for the user service.</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>email-service</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/email-service/index.js'>index.js</a></b></td>
+						<td><code>Main entry point for authentication service handling login, signup, and token management.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/email-service/package.json'>package.json</a></b></td>
+						<td><code>Defines project dependencies, scripts, and metadata required to manage the Skill-Swap platform services.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/email-service/Dockerfile'>Dockerfile</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					</table>
+					<details>
+						<summary><b>controllers</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/email-service/controllers/email.controller.js'>email.controller.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>routes</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/email-service/routes/email.routes.js'>email.routes.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>utils</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/email-service/utils/mailer.js'>mailer.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>services</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/email-service/services/email.services.js'>email.services.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>api-gateway</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/index.js'>index.js</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/package.json'>package.json</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/Dockerfile'>Dockerfile</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					</table>
+					<details>
+						<summary><b>middlewares</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/middlewares/auth.middleware.js'>auth.middleware.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/middlewares/rateLimiter.js'>rateLimiter.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>controllers</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/controllers/skill.controller.js'>skill.controller.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/controllers/auth.controller.js'>auth.controller.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/controllers/user.controller.js'>user.controller.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/controllers/notification.controller.js'>notification.controller.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/controllers/swap.controller.js'>swap.controller.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>routes</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/routes/notification.routes.js'>notification.routes.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/routes/user.routes.js'>user.routes.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/routes/auth.routes.js'>auth.routes.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/routes/swap.routes.js'>swap.routes.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/api-gateway/routes/skill.routes.js'>skill.routes.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>chat-service</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/chat-service/index.js'>index.js</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/chat-service/package.json'>package.json</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/chat-service/Dockerfile'>Dockerfile</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					</table>
+					<details>
+						<summary><b>middlewares</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/chat-service/middlewares/auth.middleware.js'>auth.middleware.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>controllers</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/chat-service/controllers/chat.controller.js'>chat.controller.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>models</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/chat-service/models/chatRoom.model.js'>chatRoom.model.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/chat-service/models/message.model.js'>message.model.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>sockets</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/chat-service/sockets/chat.socket.js'>chat.socket.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>routes</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/chat-service/routes/chat.routes.js'>chat.routes.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>utils</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/chat-service/utils/presence.store.js'>presence.store.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>db</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/chat-service/db/mongo.js'>mongo.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>skill-service</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/skill-service/index.js'>index.js</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/skill-service/package.json'>package.json</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/skill-service/Dockerfile'>Dockerfile</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					</table>
+					<details>
+						<summary><b>controllers</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/skill-service/controllers/skill.controller.js'>skill.controller.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>models</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/skill-service/models/skill.model.js'>skill.model.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>routes</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/skill-service/routes/skill-routes.js'>skill-routes.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>middleware</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/skill-service/middleware/authFirst.js'>authFirst.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>db</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/skill-service/db/mongo.js'>mongo.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>swap-service</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/swap-service/index.js'>index.js</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/swap-service/package.json'>package.json</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/swap-service/Dockerfile'>Dockerfile</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					</table>
+					<details>
+						<summary><b>controllers</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/swap-service/controllers/swap.controller.js'>swap.controller.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>models</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/swap-service/models/swap.model.js'>swap.model.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>routes</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/swap-service/routes/swap.routes.js'>swap.routes.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>db</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/swap-service/db/mongo.js'>mongo.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>notification-service</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/notification-service/index.js'>index.js</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/notification-service/package.json'>package.json</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/notification-service/Dockerfile'>Dockerfile</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					</table>
+					<details>
+						<summary><b>controllers</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/notification-service/controllers/notification.controller.js'>notification.controller.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>models</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/notification-service/models/notification.model.js'>notification.model.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>routes</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/notification-service/routes/notification.routes.js'>notification.routes.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>db</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/services/notification-service/db/mongo.js'>mongo.js</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+				</blockquote>
+			</details>
+		</blockquote>
+	</details>
+	<details> <!-- frontend Submodule -->
+		<summary><b>frontend</b></summary>
+		<blockquote>
+			<details>
+				<summary><b>apps</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/package-lock.json'>package-lock.json</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/next.config.ts'>next.config.ts</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/tsconfig.json'>tsconfig.json</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/eslint.config.mjs'>eslint.config.mjs</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/postcss.config.mjs'>postcss.config.mjs</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/package.json'>package.json</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/components.json'>components.json</a></b></td>
+						<td><code>❯ REPLACE-ME</code></td>
+					</tr>
+					</table>
+					<details>
+						<summary><b>src</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/main.tsx'>main.tsx</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/index.css'>index.css</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/App.css'>App.css</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/App.tsx'>App.tsx</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/vite-env.d.ts'>vite-env.d.ts</a></b></td>
+								<td><code>❯ REPLACE-ME</code></td>
+							</tr>
+							</table>
+							<details>
+								<summary><b>lib</b></summary>
+								<blockquote>
+									<table>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/lib/utils.ts'>utils.ts</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									</table>
+								</blockquote>
+							</details>
+							<details>
+								<summary><b>integrations</b></summary>
+								<blockquote>
+									<details>
+										<summary><b>supabase</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/integrations/supabase/types.ts'>types.ts</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/integrations/supabase/client.ts'>client.ts</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+								</blockquote>
+							</details>
+							<details>
+								<summary><b>components</b></summary>
+								<blockquote>
+									<table>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/DashboardLayout.tsx'>DashboardLayout.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ProtectedRoutes.tsx'>ProtectedRoutes.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/AuthLayout.tsx'>AuthLayout.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/AuthProtectedRoutes.tsx'>AuthProtectedRoutes.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/NotificationBell.tsx'>NotificationBell.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/Logo.tsx'>Logo.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ThemeToggle.tsx'>ThemeToggle.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/DashboardSidebar.tsx'>DashboardSidebar.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/NavLink.tsx'>NavLink.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/DashboardHeader.tsx'>DashboardHeader.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/SkillCard.tsx'>SkillCard.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									</table>
+									<details>
+										<summary><b>ui</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/context-menu.tsx'>context-menu.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/toaster.tsx'>toaster.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/accordion.tsx'>accordion.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/alert-dialog.tsx'>alert-dialog.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/radio-group.tsx'>radio-group.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/checkbox.tsx'>checkbox.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/gradient-button.tsx'>gradient-button.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/input-otp.tsx'>input-otp.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/sheet.tsx'>sheet.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/progress.tsx'>progress.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/badge.tsx'>badge.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/breadcrumb.tsx'>breadcrumb.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/sidebar.tsx'>sidebar.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/pagination.tsx'>pagination.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/label.tsx'>label.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/scroll-area.tsx'>scroll-area.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/input.tsx'>input.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/textarea.tsx'>textarea.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/toast.tsx'>toast.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/separator.tsx'>separator.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/toggle-group.tsx'>toggle-group.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/command.tsx'>command.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/popover.tsx'>popover.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/slider.tsx'>slider.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/form.tsx'>form.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/select.tsx'>select.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/button.tsx'>button.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/drawer.tsx'>drawer.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/toggle.tsx'>toggle.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/dialog.tsx'>dialog.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/alert.tsx'>alert.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/carousel.tsx'>carousel.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/navigation-menu.tsx'>navigation-menu.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/table.tsx'>table.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/tabs.tsx'>tabs.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/skeleton.tsx'>skeleton.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/use-toast.ts'>use-toast.ts</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/switch.tsx'>switch.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/dropdown-menu.tsx'>dropdown-menu.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/collapsible.tsx'>collapsible.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/gradient-input.tsx'>gradient-input.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/menubar.tsx'>menubar.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/resizable.tsx'>resizable.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/chart.tsx'>chart.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/avatar.tsx'>avatar.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/hover-card.tsx'>hover-card.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/aspect-ratio.tsx'>aspect-ratio.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/calendar.tsx'>calendar.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/tooltip.tsx'>tooltip.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/sonner.tsx'>sonner.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/components/ui/card.tsx'>card.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+								</blockquote>
+							</details>
+							<details>
+								<summary><b>hooks</b></summary>
+								<blockquote>
+									<table>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/hooks/UseChatSocket.ts'>UseChatSocket.ts</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/hooks/use-toast.ts'>use-toast.ts</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/hooks/use-mobile.tsx'>use-mobile.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									</table>
+								</blockquote>
+							</details>
+							<details>
+								<summary><b>pages</b></summary>
+								<blockquote>
+									<table>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/pages/SignUp.tsx'>SignUp.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/pages/VideoCall.tsx'>VideoCall.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/pages/NotFound.tsx'>NotFound.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/pages/Login.tsx'>Login.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/pages/Messages.tsx'>Messages.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/pages/SkillSearch.tsx'>SkillSearch.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/pages/ForgotPassword.tsx'>ForgotPassword.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/pages/Requests.tsx'>Requests.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/pages/Index.tsx'>Index.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/pages/Profile.tsx'>Profile.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/pages/Settings.tsx'>Settings.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/pages/Dashboard.tsx'>Dashboard.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									</table>
+								</blockquote>
+							</details>
+							<details>
+								<summary><b>context</b></summary>
+								<blockquote>
+									<table>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/context/userContext.tsx'>userContext.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									</table>
+								</blockquote>
+							</details>
+							<details>
+								<summary><b>test</b></summary>
+								<blockquote>
+									<table>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/test/setup.ts'>setup.ts</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/test/example.test.ts'>example.test.ts</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									</table>
+								</blockquote>
+							</details>
+							<details>
+								<summary><b>app</b></summary>
+								<blockquote>
+									<table>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/layout.tsx'>layout.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/globals.css'>globals.css</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/page.tsx'>page.tsx</a></b></td>
+										<td><code>❯ REPLACE-ME</code></td>
+									</tr>
+									</table>
+									<details>
+										<summary><b>lib</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/lib/skill.api.ts'>skill.api.ts</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/lib/auth.api.ts'>auth.api.ts</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/lib/swap.api.ts'>swap.api.ts</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/lib/profile.api.ts'>profile.api.ts</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/lib/authFetch.ts'>authFetch.ts</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/lib/api.ts'>api.ts</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/lib/auth.ts'>auth.ts</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/lib/notification.api.ts'>notification.api.ts</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+									<details>
+										<summary><b>profile</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/profile/page.tsx'>page.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+									<details>
+										<summary><b>skill-search</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/skill-search/page.tsx'>page.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+									<details>
+										<summary><b>video-call</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/video-call/page.tsx'>page.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+									<details>
+										<summary><b>forgot-password</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/forgot-password/page.tsx'>page.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+									<details>
+										<summary><b>context</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/context/AuthContext.jsx'>AuthContext.jsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+									<details>
+										<summary><b>login</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/login/page.tsx'>page.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+									<details>
+										<summary><b>messages</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/messages/page.tsx'>page.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+									<details>
+										<summary><b>requests</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/requests/page.tsx'>page.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+									<details>
+										<summary><b>signup</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/signup/page.tsx'>page.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+									<details>
+										<summary><b>verify-email</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/verify-email/page.tsx'>page.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+									<details>
+										<summary><b>settings</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/settings/page.tsx'>page.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+									<details>
+										<summary><b>dashboard</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/dashboard/page.tsx'>page.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+											<details>
+												<summary><b>profile</b></summary>
+												<blockquote>
+													<table>
+													<tr>
+														<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/dashboard/profile/page.tsx'>page.tsx</a></b></td>
+														<td><code>❯ REPLACE-ME</code></td>
+													</tr>
+													</table>
+												</blockquote>
+											</details>
+											<details>
+												<summary><b>skills</b></summary>
+												<blockquote>
+													<table>
+													<tr>
+														<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/dashboard/skills/page.tsx'>page.tsx</a></b></td>
+														<td><code>❯ REPLACE-ME</code></td>
+													</tr>
+													</table>
+												</blockquote>
+											</details>
+											<details>
+												<summary><b>video</b></summary>
+												<blockquote>
+													<table>
+													<tr>
+														<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/dashboard/video/page.tsx'>page.tsx</a></b></td>
+														<td><code>❯ REPLACE-ME</code></td>
+													</tr>
+													</table>
+												</blockquote>
+											</details>
+											<details>
+												<summary><b>messages</b></summary>
+												<blockquote>
+													<table>
+													<tr>
+														<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/dashboard/messages/page.tsx'>page.tsx</a></b></td>
+														<td><code>❯ REPLACE-ME</code></td>
+													</tr>
+													</table>
+												</blockquote>
+											</details>
+											<details>
+												<summary><b>requests</b></summary>
+												<blockquote>
+													<table>
+													<tr>
+														<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/dashboard/requests/page.tsx'>page.tsx</a></b></td>
+														<td><code>❯ REPLACE-ME</code></td>
+													</tr>
+													</table>
+												</blockquote>
+											</details>
+											<details>
+												<summary><b>wantedSkills</b></summary>
+												<blockquote>
+													<table>
+													<tr>
+														<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/dashboard/wantedSkills/page.tsx'>page.tsx</a></b></td>
+														<td><code>❯ REPLACE-ME</code></td>
+													</tr>
+													</table>
+												</blockquote>
+											</details>
+											<details>
+												<summary><b>settings</b></summary>
+												<blockquote>
+													<table>
+													<tr>
+														<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/dashboard/settings/page.tsx'>page.tsx</a></b></td>
+														<td><code>❯ REPLACE-ME</code></td>
+													</tr>
+													</table>
+												</blockquote>
+											</details>
+										</blockquote>
+									</details>
+									<details>
+										<summary><b>not-found</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/herish05/skill-swap/blob/master/frontend/apps/src/app/not-found/page.tsx'>page.tsx</a></b></td>
+												<td><code>❯ REPLACE-ME</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+								</blockquote>
+							</details>
+						</blockquote>
+					</details>
+				</blockquote>
+			</details>
+		</blockquote>
+	</details>
+</details>
+
+---
+##  Getting Started
+
+###  Prerequisites
+
+Before getting started with skill-swap, ensure your runtime environment meets the following requirements:
+
+- **Programming Language:** TypeScript
+- **Package Manager:** Npm
+- **Container Runtime:** Docker
+
+
+###  Installation
+
+Install skill-swap using one of the following methods:
+
+**Build from source:**
+
+1. Clone the skill-swap repository:
+```sh
+❯ git clone https://github.com/herish05/skill-swap
+```
+
+2. Navigate to the project directory:
+```sh
+❯ cd skill-swap
+```
+
+3. Install the project dependencies:
+
+
+**Using `npm`** &nbsp; [<img align="center" src="https://img.shields.io/badge/npm-CB3837.svg?style={badge_style}&logo=npm&logoColor=white" />](https://www.npmjs.com/)
+
+```sh
+❯ npm install
+```
+
+
+**Using `docker`** &nbsp; [<img align="center" src="https://img.shields.io/badge/Docker-2CA5E0.svg?style={badge_style}&logo=docker&logoColor=white" />](https://www.docker.com/)
+
+```sh
+❯ docker build -t herish05/skill-swap .
+```
+
+
+
+
+###  Usage
+Run skill-swap using the following command:
+**Using `npm`** &nbsp; [<img align="center" src="https://img.shields.io/badge/npm-CB3837.svg?style={badge_style}&logo=npm&logoColor=white" />](https://www.npmjs.com/)
+
+```sh
+❯ npm start
+```
+
+
+**Using `docker`** &nbsp; [<img align="center" src="https://img.shields.io/badge/Docker-2CA5E0.svg?style={badge_style}&logo=docker&logoColor=white" />](https://www.docker.com/)
+
+```sh
+❯ docker run -it {image_name}
+```
+
+
+###  Testing
+Run the test suite using the following command:
+**Using `npm`** &nbsp; [<img align="center" src="https://img.shields.io/badge/npm-CB3837.svg?style={badge_style}&logo=npm&logoColor=white" />](https://www.npmjs.com/)
+
+```sh
+❯ npm test
+```
+
+
+---
+##  Project Roadmap
+
+- [X] **`Task 1`**: <strike>Implement feature one.</strike>
+- [ ] **`Task 2`**: Implement feature two.
+- [ ] **`Task 3`**: Implement feature three.
+
+---
+
+##  Contributing
+
+- **💬 [Join the Discussions](https://github.com/herish05/skill-swap/discussions)**: Share your insights, provide feedback, or ask questions.
+- **🐛 [Report Issues](https://github.com/herish05/skill-swap/issues)**: Submit bugs found or log feature requests for the `skill-swap` project.
+- **💡 [Submit Pull Requests](https://github.com/herish05/skill-swap/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
+
+<details closed>
+<summary>Contributing Guidelines</summary>
+
+1. **Fork the Repository**: Start by forking the project repository to your github account.
+2. **Clone Locally**: Clone the forked repository to your local machine using a git client.
+   ```sh
+   git clone https://github.com/herish05/skill-swap
+   ```
+3. **Create a New Branch**: Always work on a new branch, giving it a descriptive name.
+   ```sh
+   git checkout -b new-feature-x
+   ```
+4. **Make Your Changes**: Develop and test your changes locally.
+5. **Commit Your Changes**: Commit with a clear message describing your updates.
+   ```sh
+   git commit -m 'Implemented new feature x.'
+   ```
+6. **Push to github**: Push the changes to your forked repository.
+   ```sh
+   git push origin new-feature-x
+   ```
+7. **Submit a Pull Request**: Create a PR against the original project repository. Clearly describe the changes and their motivations.
+8. **Review**: Once your PR is reviewed and approved, it will be merged into the main branch. Congratulations on your contribution!
+</details>
+
+<details closed>
+<summary>Contributor Graph</summary>
+<br>
+<p align="left">
+   <a href="https://github.com{/herish05/skill-swap/}graphs/contributors">
+      <img src="https://contrib.rocks/image?repo=herish05/skill-swap">
+   </a>
+</p>
+</details>
+
+---
+
+##  License
+
+This project is protected under the [SELECT-A-LICENSE](https://choosealicense.com/licenses) License. For more details, refer to the [LICENSE](https://choosealicense.com/licenses/) file.
+
+---
+
+##  Acknowledgments
+
+- List any resources, contributors, inspiration, etc. here.
+
+---
