@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/generateToken.js";
 import axios from "axios";
+
 const generateOtp = ()=>Math.floor(100000 + Math.random() * 900000).toString();
 
 export const healthCheck = (req,res)=>{
@@ -150,3 +151,51 @@ export const resetPassword = async (req, res) => {
 
   res.json({ message: "Password reset successful" });
 };
+
+export const googleAuth = async(req,res)=> {
+  try {
+    const {credential} = req.body;
+    if(!credential) {
+      return res.status(400).json({message:"Credential misssing"});
+    }
+
+    const ticket = await client.verifyIdToken({
+      idToken:credential,
+      audience:process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const {sub,email,name,picture} = payload;
+    let user =  await User.findOne({email});
+    if(!user) {
+      user = await User.create({
+        email,
+        fullName:name,
+        avatar:picture,
+        provider:"GOOGLE",
+        providerId:sub,
+        isEmailVerified:true,
+        lastLoginAt:new Date()
+      });
+    }
+
+    if(user.provider === "LOCAL" ) {
+      return res.status(400).json(
+        {
+          message:"Account exists with email/password. Use normal login."
+        });
+    }
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+    user .lastLoginAt = new Date();
+    user.refreshToken = refreshToken;
+    await user.save();
+
+    res.json({
+      accessToken,
+      refreshToken
+    })
+  } catch (error) {
+    console.log("Google login error ", error);
+    res.status(500).json({message:"Google login failed"});
+  }
+}
