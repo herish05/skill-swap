@@ -5,6 +5,7 @@ import {AuthProvider} from './context/AuthContext';
 import { Toaster } from "sonner";
 import { ThemeProvider } from "next-themes";
 import { UserProvider } from "@/context/userContext";
+import {GoogleOAuthProvider} from "@react-oauth/google"
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -30,11 +31,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <AuthProvider>
-            <UserProvider>{children}</UserProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID!}>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <AuthProvider>
+              <UserProvider>{children}</UserProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </GoogleOAuthProvider>
         <Toaster richColors position="top-right" />
       </body>
     </html>

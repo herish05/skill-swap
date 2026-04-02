@@ -26,7 +26,9 @@ const userSchema = new mongoose.Schema({
     },
     passwordHash:{
         type:String,
-        required:true
+        required:function(){
+            return this.provider === "LOCAL";
+        }
     },
     refreshToken:{
         type:String
@@ -40,13 +42,19 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    providerId:String,
+    fullName: String,
+    avatar:String,
+
     otp:otpSchema,
     lastLoginAt:{
         type:Date
     },
     dateofbirth:{
         type:Date,
-        required:true
+        required:function(){
+            return this.provider === "LOCAL";
+        }
     },
     createdAt:{
         type:Date,
