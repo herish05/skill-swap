@@ -2,6 +2,17 @@ import axios from "axios";
 
 const AUTH_SERVICE = process.env.AUTH_SERVICE_URL || "http://localhost:4001";
 
+export const googleAuth = async(req,res)=>{
+  try {
+    const response = await axios.post(`${AUTH_SERVICE}/google`,req.body);
+    res.status(response.status).json(response.data);
+  } catch (error) {
+      res
+        .status(error.response?.status || 500)
+        .json(error.response?.data || { error: " google Login failed" });
+  }
+};
+
 export const signup = async(req,res) => {
     try{
         const response = await axios.post(

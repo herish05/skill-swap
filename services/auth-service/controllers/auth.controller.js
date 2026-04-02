@@ -4,6 +4,7 @@ import User from "../models/user.model.js";
 import {OAuth2Client} from "google-auth-library";
 import { generateAccessToken, generateRefreshToken } from "../utils/generateToken.js";
 import axios from "axios";
+
 const generateOtp = ()=>Math.floor(100000 + Math.random() * 900000).toString();
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 export const healthCheck = (req,res)=>{
@@ -151,9 +152,6 @@ export const resetPassword = async (req, res) => {
 
   res.json({ message: "Password reset successful" });
 };
-
-
-// google login
 
 export const googleAuth = async(req,res)=> {
   try {
