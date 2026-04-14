@@ -14,15 +14,32 @@ export const getUserSkills = async(req,res)=>{
 }
 
 export const searchSkills = async(req,res)=>{
-    const {q,category,level,type} = req.query;
-    const filter = {isPublic:true};
-    if(q)filter.skillName = new RegExp(q,"i");
-    if(category)filter.category = category;
-    if(level)filter.level = level;
-    if(type)filter.type = type;
-    console.log(filter);
-    const skills = await Skill.find(filter).limit(20);
-    res.json(skills);
+    try {
+      const { q, category, level, type, page = 1, limit = 20 } = req.query;
+      const filter = {
+        isPublic: true,
+      };
+
+      if (q) {
+        filter.$or = [
+          { skillName: { $regex: q, $options: "i" } },
+          { category: { $regex: q, $options: "i" } },
+          { tags: { $regex: q, $options: "i" } },
+        ];
+      }
+      if (category) filter.category = category;
+      if (level) filter.level = level;
+      if (type) filter.type = type;
+      const skills = await Skill.find(filter)
+        .skip((page - 1) * limit)
+        .limit(Number(limit))
+        .sort({ createdAt: -1 });
+      res.json(skills);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Search failed" });
+    }
+
 }
 
 export const deleteUser = async(req,res) =>{

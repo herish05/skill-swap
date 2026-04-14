@@ -12,17 +12,20 @@ const skillSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      index:true
     },
 
     category: {
       type: String,
       required: true,
+      index:true
     },
 
     type: {
       type: String,
       enum: ["OFFERED", "WANTED"],
       required: true,
+      index:true
     },
 
     level: {
@@ -40,6 +43,7 @@ const skillSchema = new mongoose.Schema(
     isPublic: {
       type: Boolean,
       default: true,
+      index:true
     },
 
     isVerified: {
@@ -54,5 +58,5 @@ const skillSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+skillSchema.index({skillName:"text",category:"text",tags:"text"});
 export default mongoose.model("Skill", skillSchema);
