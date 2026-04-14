@@ -36,3 +36,10 @@ export const getMatches = async(token:string)=>{
 export const getSkill = async(id:string,token:string)=>{
   return await authFetch(`http://localhost:4000/skills/getSkill/${id}`);
 }
+
+export const searchSkills = async(query:string,token:string)=>{
+  const data = await authFetch(`http://localhost:4000/skills/search?query=${query}`, {
+    method: "GET",
+  });
+  return data;
+} 

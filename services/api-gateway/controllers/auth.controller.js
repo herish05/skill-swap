@@ -45,16 +45,16 @@ export const login = async (req, res) => {
       .json(error.response?.data || { error: "Login failed" });
   }
 };
-export const googleAuth = async(req,res)=>{
-  try {
-    const response = await axios.post(`${AUTH_SERVICE}/google`,req.body);
-    res.status(response.status).json(response.data);
-  } catch (error) {
-      res
-        .status(error.response?.status || 500)
-        .json(error.response?.data || { error: " google Login failed" });
-  }
-}
+// export const googleAuth = async(req,res)=>{
+//   try {
+//     const response = await axios.post(`${AUTH_SERVICE}/google`,req.body);
+//     res.status(response.status).json(response.data);
+//   } catch (error) {
+//       res
+//         .status(error.response?.status || 500)
+//         .json(error.response?.data || { error: " google Login failed" });
+//   }
+// }
 export const refreshToken = async(req,res)=>{
   try {
     const response = await axios.post(`${AUTH_SERVICE}/refresh`,req.body);

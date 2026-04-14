@@ -34,7 +34,32 @@ export const searchSkills = async(req,res)=>{
         .skip((page - 1) * limit)
         .limit(Number(limit))
         .sort({ createdAt: -1 });
-      res.json(skills);
+
+      const response = await Promise.all(
+        skills.map(async (skill)=>{
+
+          const wantedSkill = await Skill.findOne({
+            authUserId: skill.authUserId,
+            type: "WANTED",
+          });
+          const userRes = await fetch (`${process.env.USER_SERVICE}/profile/${skill.authUserId}`);
+          if(!userRes.ok)return null;
+          const userProfile = await userRes.json();
+          return {
+            user:{
+              id:skill.authUserId,
+              name:userProfile?.profile?.fullName || "Unknown user",
+              rating:userProfile?.profile?.averageRating || 0,
+              reviews:userProfile?.profile?.ratings?.length || 0,
+            },
+            skillOffered:skill.skillName,
+            skillWanted:wantedSkill?.skillName || "Open to swap",
+            offeredSkillId:skill._id,
+            wantedSkillId:wantedSkill?._id || null,
+          }
+        })
+      )
+      res.json(response);
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Search failed" });

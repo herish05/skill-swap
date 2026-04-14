@@ -12,6 +12,7 @@ import { createSwap } from "../lib/swap.api";
 import { toast } from "sonner";
 import { useUser } from "@/context/userContext";
 import { getAllSwaps } from "../lib/swap.api";
+import { searchSkills } from "../lib/skill.api";
 // const mockUsers = [
 // 	{
 // 		user: { name: "Sarah Chen", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah", rating: 4.9, reviews: 28 },
@@ -57,7 +58,8 @@ export default function Dashboard() {
   const [matchData,setMatchData] = useState<any[]>([]);
   const [loading,setLoading] = useState(true);
   const [sentSwaps,setSentSwaps] = useState<any[]>([]);
-
+  const [searchQuery,setSearchQuery] = useState("");
+  const [searchResults,setSearchResults] = useState<any[]>([]);
   useEffect(()=>{
     const u = getUserFromToken();
     if(!u)return;
@@ -97,6 +99,29 @@ export default function Dashboard() {
     loadSwaps();
   },[userD])
 
+
+  useEffect(()=>{
+    const delay = setTimeout(async()=>{
+      if(!searchQuery){
+        setSearchResults([]);
+        return;
+      }
+
+      try{
+        const data = matchData.length >0?matchData.filter((match)=>{
+          const q = searchQuery.toLowerCase();
+          return (
+            match.skillOffered?.toLowerCase().includes(q) ||
+            match.skillWanted?.toLowerCase().includes(q) ||
+            match.user?.name?.toLowerCase().includes(q) 
+          )
+        }):[];
+        setSearchResults(data);
+      }catch(error) {
+        console.log("skill search error"+error)
+      }
+    },400)
+  },[searchQuery])
   const getSwapStatus = (receiverId:string,offeredSkillId:string,wantedSkillId:string)=>{
     const swap = sentSwaps.find((s)=>
       s.requesterUserId === userD.authUserId &&
@@ -129,9 +154,11 @@ export default function Dashboard() {
     }
   }
   const { user } = useUser();
+  const dataToShow = searchQuery?searchResults:matchData;
 	return (
     <ProtectedRoute>
-      <DashboardLayout>net
+      <DashboardLayout>
+        net
         <div className="space-y-6 animate-fade-in">
           {/* Welcome section */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -171,6 +198,8 @@ export default function Dashboard() {
                 <GradientInput
                   placeholder="Search for skills (e.g., Java, Guitar, UI Design)"
                   icon={<Search size={18} />}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               <GradientButton variant="outline" className="gap-2">
@@ -187,33 +216,35 @@ export default function Dashboard() {
             ) : matchData.length === 0 ? (
               <p>No matches yet. Add more skills to get matched.</p>
             ) : (
-              matchData.map((data) => {
+              dataToShow.map((data) => {
                 const status = getSwapStatus(
                   data.user.id,
                   data.offeredSkillId,
-                  data.wantedSkillId
+                  data.wantedSkillId,
                 );
-                console.log(status)
-                return (<SkillCard
-                  key={`${data.user.id}-${data.offeredSkillId}-${data.wantedSkillId}`}
-                  user={{
-                    name: data.user.name,
-                    avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${data.user.name}`,
-                    rating: data.user.rating,
-                    reviews: data.user.reviews,
-                  }}
-                  skillOffered={data.skillOffered}
-                  skillWanted={data.skillWanted}
-                  swapStatus = {status}
-                  onRequestSwap={() =>
-                    handleRequestSwap(
-                      data.user.id,
-                      data.offeredSkillId,
-                      data.wantedSkillId,
-                    )
-                  }
-                />)
-                  })
+                console.log(status);
+                return (
+                  <SkillCard
+                    key={`${data.user.id}-${data.offeredSkillId}-${data.wantedSkillId}`}
+                    user={{
+                      name: data.user.name,
+                      avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${data.user.name}`,
+                      rating: data.user.rating,
+                      reviews: data.user.reviews,
+                    }}
+                    skillOffered={data.skillOffered}
+                    skillWanted={data.skillWanted}
+                    swapStatus={status}
+                    onRequestSwap={() =>
+                      handleRequestSwap(
+                        data.user.id,
+                        data.offeredSkillId,
+                        data.wantedSkillId,
+                      )
+                    }
+                  />
+                );
+              })
             )}
           </div>
         </div>

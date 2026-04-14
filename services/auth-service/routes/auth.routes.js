@@ -7,8 +7,7 @@ import {
     signup,
     requestPasswordReset,
     resetPassword, 
-    refreshToken,
-    googleAuth
+    refreshToken
     } from "../controllers/auth.controller.js";
 const router = express.Router();
 router.get("/health",healthCheck);
