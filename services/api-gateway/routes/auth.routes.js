@@ -1,8 +1,8 @@
 import express from "express";
-import { signup, verifyEmail, login, requestPasswordReset, resetPassword, refreshToken, googleAuth } from "../controllers/auth.controller.js";
+import { signup, verifyEmail, login, requestPasswordReset, resetPassword, refreshToken, googleAuth, healthCheck } from "../controllers/auth.controller.js";
 import { authLimiter } from "../middlewares/ratelimiter.js";
 const router = express.Router();
-
+router.get("/health",healthCheck);
 router.post("/signup",authLimiter,signup);
 router.post("/verify-email", verifyEmail);
 router.post("/login",authLimiter,login);

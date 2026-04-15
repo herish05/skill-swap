@@ -1,6 +1,14 @@
 import axios from "axios";
 
 const AUTH_SERVICE = process.env.AUTH_SERVICE_URL || "http://localhost:4001";
+export const healthCheck = async(req,res)=>{
+    try {
+        const response = await axios.get(`${AUTH_SERVICE}/health`); 
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: "Health check failed" });
+    }
+};
 
 export const googleAuth = async(req,res)=>{
   try {
