@@ -3,7 +3,8 @@ import axios from "axios";
 /**
  * Create swap request
  */
-
+const USER_SERVICE = process.env.USER_SERVICE;
+const SKILL_SERVICE = process.env.SKILL_SERVICE;
 export const createSwap = async(req,res)=>{
     const requesterUserId = req.headers["x-user-id"]
     const {
@@ -65,11 +66,13 @@ export const getUserSwapsWithName = async(req,res)=>{
     const fullData = await Promise.all(
         swaps.map(async(swap)=>{
             const otherUserId = swap.requesterUserId === userId?swap.receiverUserId:swap.requesterUserId;
-            const offeredSkill = await axios.get(`http://skill-service:4003/getSkill/${swap.offeredSkillId}`);
+            const offeredSkill = await axios.get(`${SKILL_SERVICE}/getSkill/${swap.offeredSkillId}`);
             const wantedSkill = await axios.get(
-              `http://skill-service:4003/getSkill/${swap.wantedSkillId}`,
+              `${SKILL_SERVICE}/getSkill/${swap.wantedSkillId}`,
             );
-            const userDetails = await axios.get(`http://user-service:4002/profile/${otherUserId}`);
+            const userDetails = await axios.get(
+              `${USER_SERVICE}/profile/${otherUserId}`,
+            );
             return {
                 id:swap._id,
                 status:swap.status,
