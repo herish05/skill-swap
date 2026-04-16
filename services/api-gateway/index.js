@@ -38,7 +38,7 @@ app.get("/wake",async(req,res)=>{
       process.env.NOTIFICATION_SERVICE_URL,
     ];
     await Promise.all(
-      services.map(url=>fetch(url+"/health")).catch(()=>{})
+      services.map(url=>fetch(url+"/health").catch((e)=>{console.log(e)}))
     )
     res.json({message:"All services triggered"})
   } catch (error) {
