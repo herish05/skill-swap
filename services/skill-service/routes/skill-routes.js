@@ -7,9 +7,11 @@ import {
     getUserSkills,
     deleteUser,
     getMatches,
-    getSkillById
+    getSkillById,
+    healthCheck
 } from '../controllers/skill.controller.js';
 // import { authFirst } from "../middleware/authFirst.js";
+router.get("/health",healthCheck)
 router.get("/matches",getMatches);
 router.post('/',addSkill);
 router.get('/user/:authUserId',getUserSkills);

@@ -17,11 +17,35 @@ app.use("/users",userRoutes)
 app.use("/skills",skillRoutes);
 app.use("/swaps",swapRoutes);
 app.use("/notification",notificationRoutes);
-app.get("/health",(req,res)=>{
-  res.json({message:"API Gateway is healthy"});
-})
-const PORT = process.env.PORT || 4000;
 
+const PORT = process.env.PORT || 4000;
+app.get("/health",async(req,res)=>{
+  try {
+    res.json({status:"ok",service :"API-Gateway"});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message :"error to check health"});
+  }
+})
+app.get("/wake",async(req,res)=>{
+  try {
+    const services = [
+      process.env.AUTH_SERVICE_URL,
+      process.env.CHAT_SERVICE_URL,
+      process.env.USER_SERVICE_URL,
+      process.env.SKILL_SERVICE_URL,
+      process.env.SWAP_SERVICE_URL,
+      process.env.NOTIFICATION_SERVICE_URL,
+    ];
+    await Promise.all(
+      services.map(url=>fetch(url+"/health")).catch(()=>{})
+    )
+    res.json({message:"All services triggered"})
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message:"Failed to wake up services"});
+  }
+})
 app.listen(PORT, () => {
   console.log(`API Gateway running on port ${PORT}`);
 });

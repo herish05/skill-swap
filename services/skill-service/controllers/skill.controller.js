@@ -1,6 +1,13 @@
 import mongoose from 'mongoose';
 import Skill from '../models/skill.model.js';
-
+export const healthCheck = async (req, res) => {
+  try {
+    res.json({ message: "skill-service is running" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "skill-services health is not good" });
+  }
+};
 export const addSkill = async(req,res)=>{
     const data = req.body;
     const skill = await Skill.create(data);

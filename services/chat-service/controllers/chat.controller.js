@@ -1,6 +1,14 @@
 import Message from "../models/message.model.js";
 import ChatRoom from "../models/chatRoom.model.js";
 import { onlineUsers } from "../utils/presence.store.js";
+export const healthCheck = async(req,res)=>{
+    try {
+        res.json({message:"chat-service is running"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"chat-services health is not good"});
+    }
+}
 export const getAllMessages = async(req,res)=>{
     try{
         const {swapId} = req.params;

@@ -5,6 +5,15 @@ import axios from "axios";
  */
 const USER_SERVICE = process.env.USER_SERVICE;
 const SKILL_SERVICE = process.env.SKILL_SERVICE;
+
+export const healthCheck = async(req,res)=>{
+    try {
+        res.json({message:"swap-service is running"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"swap-services health is not good"});
+    }
+}
 export const createSwap = async(req,res)=>{
     const requesterUserId = req.headers["x-user-id"]
     const {

@@ -6,7 +6,7 @@ export const healthCheck = async(req,res)=>{
         const response = await axios.get(`${AUTH_SERVICE}/health`); 
         res.status(response.status).json(response.data);
     } catch (error) {
-        res.status(500).json({ error: "Health check failed" });
+        res.status(500).json({ error: "Health check failed",message:error });
     }
 };
 

@@ -4,6 +4,15 @@ import Notification from "../models/notification.model.js";
  * Create a new Notification
  */
 
+export const healthCheck = async (req, res) => {
+  try {
+    res.json({ message: "Notification-service is running" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Notification-services health is not good" });
+  }
+};
+
 export const createNotification = async (req, res) => {
   const { userId, type, title, message, metadata } = req.body;
 

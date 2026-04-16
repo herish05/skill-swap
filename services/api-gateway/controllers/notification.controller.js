@@ -5,7 +5,7 @@ const NOTIFICATION_SERVICE_URL=process.env.NOTIFICATION_SERVICE_URL
 
 export const getUserNotifications = async(req,res)=>{
     try{
-        const response = await axios.get(`${NOTIFICATION_SERVICE_URL}/notification/user/${req.params.userId}`);
+        const response = await axios.get(`${NOTIFICATION_SERVICE_URL}/user/${req.params.userId}`);
         res.json(response.data);
     }catch(error) {
         console.error("Get notifications error:", error.message);
@@ -22,7 +22,7 @@ export const getUserNotifications = async(req,res)=>{
 
 export const markNotificationAsRead = async(req,res)=>{
     try{
-        const response = await axios.patch(`${NOTIFICATION_SERVICE_URL}/notification/${req.params.id}/read`);
+        const response = await axios.patch(`${NOTIFICATION_SERVICE_URL}/${req.params.id}/read`);
         res.json(response.data);
     }catch(error) {
       console.log(error);
@@ -32,7 +32,7 @@ export const markNotificationAsRead = async(req,res)=>{
 export const getUnreadNotificationCount = async(req,res)=>{
     try{
         const response = await axios.get(
-          `${NOTIFICATION_SERVICE_URL}/notification/user/${req.params.userId}/unread-count`,
+          `${NOTIFICATION_SERVICE_URL}/user/${req.params.userId}/unread-count`,
         );
         res.json(response.data);
     }catch(error) {

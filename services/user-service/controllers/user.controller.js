@@ -1,5 +1,14 @@
 import UserProfile from '..//models/userProfile.model.js';
 import mongoose from 'mongoose';
+
+export const healthCheck = async(req,res)=>{
+    try {
+        res.json({message:"user-service is running"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"user-services health is not good"});
+    }
+}
 export const createProfile = async(req,res)=> {
     const {authUserId,fullName,bio,location} = req.body;
     if(!authUserId || !fullName) {
