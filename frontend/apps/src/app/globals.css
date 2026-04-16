@@ -1,218 +1,151 @@
-/* === Modern Dark Theme for Entire Website === */
-html, body {
-  background: #181a20 !important;
-  color: #f1f1f1 !important;
-  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-  min-height: 100vh;
-}
-
-*, *::before, *::after {
-  background: transparent;
-  color: inherit;
-  box-sizing: border-box;
-}
-
-/* Card, sidebar, and panel backgrounds */
-.card, .sidebar, .panel, .glass, .bg-card, .bg-secondary, .bg-foreground, .bg-muted-foreground, .bg-muted, .bg-primary, .bg-info {
-  background: #23262f !important;
-  color: #f1f1f1 !important;
-  border-color: #23232b !important;
-}
-
-/* Inputs, buttons, search bars */
-input, textarea, select, .input, .search, .search-bar {
-  background: #23262f !important;
-  color: #f1f1f1 !important;
-  border: 1px solid #353945 !important;
-}
-input::placeholder, textarea::placeholder {
-  color: #888 !important;
-}
-
-/* Button styles */
-button, .btn, .gradient-bg, .gradient-button {
-  background: #353945 !important;
-  color: #f1f1f1 !important;
-  border: 1px solid #353945 !important;
-  transition: background 0.2s, color 0.2s;
-  border-radius: 12px;
-  font-weight: 500;
-}
-button:hover, .btn:hover, .gradient-bg:hover, .gradient-button:hover {
-  background: #4b5162 !important;
-  color: #fff !important;
-}
-
-/* Borders and outlines */
-.border, .border-border, .border-muted-foreground, .border-primary, .border-info {
-  border-color: #23232b !important;
-}
-
-/* Headings and strong text */
-h1, h2, h3, h4, h5, h6, strong, b {
-  color: #fff !important;
-}
-
-/* Muted/secondary text */
-.text-muted-foreground, .text-muted, .text-secondary {
-  color: #b3b3b3 !important;
-}
-
-/* Primary text */
-.text-primary, .text-primary-foreground {
-  color: #f1f1f1 !important;
-}
-
-/* Accent colors for status and highlights */
-.text-destructive {
-  color: #ff5c5c !important;
-}
-.text-success {
-  color: #4ade80 !important;
-}
-.text-warning {
-  color: #facc15 !important;
-}
-.text-info {
-  color: #38bdf8 !important;
-}
-
-/* Badge and pill backgrounds */
-.badge, .pill, .rounded, .rounded-xl, .rounded-lg {
-  background: #23262f !important;
-  color: #f1f1f1 !important;
-}
-
-/* Remove box-shadows that may cause contrast issues */
-* {
-  box-shadow: none !important;
-}
-
-/* Scrollbar styling for dark mode */
-::-webkit-scrollbar {
-  width: 8px;
-  background: #23262f;
-}
-::-webkit-scrollbar-thumb {
-  background: #353945;
-  border-radius: 4px;
-}
-
-/* Utility classes for dark theme */
-.bg-dark { background: #181a20 !important; }
-.text-light { color: #f1f1f1 !important; }
-.border-dark { border-color: #23232b !important; }
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *), &:is(.dark));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-destructive: var(--destructive);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-dark: #111111;
+  --color-light: #f3f3f3;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --card: #ffffff;
+  --card-foreground: #171717;
+  --border: #e2e8f0;
+  --primary: #38bdf8;
+  --primary-foreground: #ffffff;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  --success: #4ade80;
+  --destructive: #ef4444;
 }
 
+/* 
+ * The .dark class applies variables for dark mode 
+ * next-themes toggles this class on the html element
+ */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --card: #18181b;
+  --card-foreground: #ededed;
+  --border: #27272a;
+  --primary: #38bdf8;
+  --primary-foreground: #0f172a;
+  --muted: #18181b;
+  --muted-foreground: #a1a1aa;
+  --accent: #27272a;
+  --accent-foreground: #ededed;
+}
 
 body {
-  background: #111 !important;
-  color: #f3f3f3 !important;
+  background-color: var(--background);
+  color: var(--foreground);
   font-family: 'Inter', Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* === Global Dark Theme Overrides === */
 html, body {
-  background: #111 !important;
-  color: #f3f3f3 !important;
   min-height: 100vh;
 }
+
 *, *::before, *::after {
-  background: transparent;
-  color: inherit;
   box-sizing: border-box;
 }
-.card, .sidebar, .panel, .glass, .bg-card, .bg-secondary, .bg-foreground, .bg-muted-foreground, .bg-muted, .bg-primary, .bg-info {
-  background: #18181b !important;
-  color: #f3f3f3 !important;
-  border-color: #23232b !important;
-}
-input, textarea, select, .input, .search, .search-bar {
-  background: #23232b !important;
-  color: #f3f3f3 !important;
-  border: 1px solid #333 !important;
+
+/* Forms and Inputs */
+input, textarea, select {
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
 }
 input::placeholder, textarea::placeholder {
-  color: #888 !important;
+  color: var(--muted-foreground);
 }
-button, .btn, .gradient-bg, .gradient-button {
-  background: #23232b !important;
-  color: #f3f3f3 !important;
-  border: 1px solid #333 !important;
-  transition: background 0.2s, color 0.2s;
+
+/* Glassmorphism helpers */
+.glass {
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
 }
-button:hover, .btn:hover, .gradient-bg:hover, .gradient-button:hover {
-  background: #333 !important;
-  color: #fff !important;
+.dark .glass {
+  background-color: rgba(24, 24, 27, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
-.border, .border-border, .border-muted-foreground, .border-primary, .border-info {
-  border-color: #23232b !important;
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
 }
-h1, h2, h3, h4, h5, h6, strong, b {
-  color: #fff !important;
+.dark .glass-card {
+  background: rgba(24, 24, 27, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
-.text-muted-foreground, .text-muted, .text-secondary {
-  color: #b3b3b3 !important;
+
+/* Gradients */
+.gradient-bg {
+  background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
+  color: #fff;
 }
-.text-primary, .text-primary-foreground {
-  color: #f3f3f3 !important;
+.dark .gradient-bg {
+  background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
 }
-.text-destructive {
-  color: #ff5c5c !important;
+.gradient-text {
+  background-color: #38bdf8;
+  background-image: linear-gradient(to right, #38bdf8, #818cf8);
+  background-size: 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
 }
-.text-success {
-  color: #4ade80 !important;
-}
-.text-warning {
-  color: #facc15 !important;
-}
-.text-info {
-  color: #38bdf8 !important;
-}
-.badge, .pill, .rounded, .rounded-xl, .rounded-lg {
-  background: #23232b !important;
-  color: #f3f3f3 !important;
-}
-* {
-  box-shadow: none !important;
-}
+
+/* Scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
-  background: #18181b;
+  background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
-  background: #23232b;
+  background: var(--border);
   border-radius: 4px;
 }
-.bg-dark { background: #111 !important; }
-.text-light { color: #f3f3f3 !important; }
-.border-dark { border-color: #23232b !important; }
 
-
+/* Date Pickers */
 input[type="date"]::-webkit-calendar-picker-indicator {
     opacity: 0;
     position: absolute;
     width: 100%;
     height: 100%;
     cursor: pointer;
-    
 }
+
+/* Reusing utility classes explicitly for the homepage */
+.bg-dark { background-color: var(--background); }
+.text-light { color: var(--foreground); }
+.border-dark { border-color: var(--border); }

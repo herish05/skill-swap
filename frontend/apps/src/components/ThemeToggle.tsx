@@ -12,26 +12,26 @@ export default function ThemeToggle() {
   if (!mounted) return null;
 
   return (
-    <div className="flex items-center gap-2 bg-card border border-border rounded-full px-2 py-1">
+    <div className="flex items-center gap-3 bg-card border border-border rounded-full px-3 py-1.5 shadow-sm">
       <button
         onClick={() => setTheme("light")}
-        className={theme === "light" ? "text-primary" : "text-muted-foreground"}
+        className={theme === "light" ? "text-primary" : "text-muted-foreground hover:text-foreground transition-colors"}
       >
-        <Sun size={18} />
+        <Sun size={20} />
       </button>
       <button
         onClick={() => setTheme("dark")}
-        className={theme === "dark" ? "text-primary" : "text-muted-foreground"}
+        className={theme === "dark" ? "text-primary" : "text-muted-foreground hover:text-foreground transition-colors"}
       >
-        <Moon size={18} />
+        <Moon size={20} />
       </button>
       <button
         onClick={() => setTheme("system")}
         className={
-          theme === "system" ? "text-primary" : "text-muted-foreground"
+          theme === "system" ? "text-primary" : "text-muted-foreground hover:text-foreground transition-colors"
         }
       >
-        <Laptop size={18} />
+        <Laptop size={20} />
       </button>
     </div>
   );

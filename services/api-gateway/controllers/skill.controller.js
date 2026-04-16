@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const SKILL_SERVICE_URL = process.env.SKILL_SERVICE_URL || "http://localhost:4003";
+const SKILL_SERVICE_URL =
+  process.env.SKILL_SERVICE_URL || "https://skill-service-akkl.onrender.com";
 
 export const addSkills = async(req,res)=>{
     try{
