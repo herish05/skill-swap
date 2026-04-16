@@ -1,9 +1,9 @@
 import axios from "axios"
 export const api = axios.create({
-    baseURL:"http://localhost:4000"
+  baseURL: "https://api-gateway-wkss.onrender.com",
 });
 
-const BASE_URL = "http://localhost:4000";
+const BASE_URL = "https://api-gateway-wkss.onrender.com";
 api.interceptors.request.use((config)=>{
     const token = localStorage.getItem("token");
     if(token)config.headers.Authorization = `Bearer ${token}`;

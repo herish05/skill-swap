@@ -1,4 +1,4 @@
-const API = "http://localhost:4000";
+const API = "https://api-gateway-wkss.onrender.com";
 
 const logout = () => {
   localStorage.clear();

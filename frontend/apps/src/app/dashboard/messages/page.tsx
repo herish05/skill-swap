@@ -94,7 +94,7 @@ export default function Messages() {
     const loadMessages = async () => {
       try {
         const data = await authFetch(
-          `http://localhost:4007/chats/${selectedChat.swapId}/messages`,
+          `https://chat-service-i9if.onrender.com/chats/${selectedChat.swapId}/messages`,
         );
         // const data = await res.json();
         setMessages(data);
