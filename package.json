@@ -3,19 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "apps/*",
+    "frontend/apps",
     "services/*",
     "packages/*"
-  ],
-  "scripts": {
-    "dev": "docker-compose-up",
-    "build": "docker-compose build"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "jwt-decode": "^4.0.0"
-  }
+  ]
 }
