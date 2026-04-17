@@ -11,8 +11,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use("/chats",chatRoutes);
 connectDB();
+app.use("/chats",chatRoutes);
 const server = http.createServer(app);
 const io = new Server(server,{cors:{origin: "*"}});
 const PORT = process.env.PORT || 4007;

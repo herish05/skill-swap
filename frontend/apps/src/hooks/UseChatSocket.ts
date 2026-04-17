@@ -3,7 +3,7 @@ import {io,Socket} from "socket.io-client";
 export const useChatSocket = (userId:string)=>{
     const socketRef = useRef<Socket | null>(null);
     useEffect(()=>{
-        const socket = io("http://localhost:4007");
+        const socket = io("https://chat-service-i9if.onrender.com");
         socketRef.current = socket;
         socket.on("connect",()=>{
             socket.emit("registerUser",userId);
