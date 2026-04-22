@@ -64,7 +64,7 @@ export default function Login() {
               <GradientInput
                 type="email"
                 placeholder="Email address"
-                icon={<Mail size={20} />}
+                icon={<Mail />}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -74,7 +74,7 @@ export default function Login() {
                 <GradientInput
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
-                  icon={<Lock size={20} />}
+                  icon={<Lock/>}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required

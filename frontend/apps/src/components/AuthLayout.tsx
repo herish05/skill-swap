@@ -38,7 +38,7 @@ const AuthLayout = ({ children, illustration }: AuthLayoutProps) => {
 };
 
 const SkillExchangeIllustration = () => (
-  <div className="flex flex-col items-center gap-8">
+  <div className="flex flex-col items-center gap-8 text-gray-300 font-bold">
     <div className="flex items-center gap-6">
       {/* Person 1 */}
       <div className="flex flex-col items-center gap-3 animate-float">
@@ -49,7 +49,7 @@ const SkillExchangeIllustration = () => (
           <p className="text-sm font-medium">Design</p>
         </div>
       </div>
-      
+
       {/* Exchange arrows */}
       <div className="flex flex-col items-center gap-2">
         <div className="w-12 h-0.5 bg-primary-foreground/50" />
@@ -58,7 +58,7 @@ const SkillExchangeIllustration = () => (
         </div>
         <div className="w-12 h-0.5 bg-primary-foreground/50" />
       </div>
-      
+
       {/* Person 2 */}
       <div className="flex flex-col items-center gap-3 animate-float-delayed">
         <div className="w-20 h-20 rounded-full bg-primary-foreground/20 flex items-center justify-center">
@@ -69,11 +69,12 @@ const SkillExchangeIllustration = () => (
         </div>
       </div>
     </div>
-    
-    <div className="max-w-xs text-center">
+
+    <div className="max-w-xs text-center ">
       <h2 className="text-2xl font-bold mb-2">Learn by Teaching</h2>
-      <p className="text-primary-foreground/80 text-sm">
-        Connect with others who have the skills you want, and share what you know.
+      <p className="text-sm text-gray-400/30">
+        Connect with others who have the skills you want, and share what you
+        know.
       </p>
     </div>
   </div>
