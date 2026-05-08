@@ -7,7 +7,8 @@ import axios from "axios";
 
 const generateOtp = ()=>Math.floor(100000 + Math.random() * 900000).toString();
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-export const healthCheck = (req,res)=>{
+export const healthCheck = async(req,res)=>{
+  await fetch(`${process.env.EMAIL_SERVICE}/email/health`).catch((e)=>{console.log("Email service health check failed",e)});
    res.status(200).json({
      service: "auth-service",
      status: "running",

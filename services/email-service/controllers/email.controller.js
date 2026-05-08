@@ -1,5 +1,11 @@
 import { sendMail } from "../services/email.services.js";
-
+export const healthCheck = (req,res)=>{
+  try {
+    res.status(200).json({message:"Email service is healthy"});
+  } catch (error) {
+    console.log("Error in email service",error);
+  }
+}
 export const sendWelcomeEmail = async(req,res)=>{
     const {email,name} = req.body;
    const html = `
