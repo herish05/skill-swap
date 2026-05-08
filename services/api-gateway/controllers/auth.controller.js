@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const AUTH_SERVICE = process.env.AUTH_SERVICE_URL || "http://localhost:4001";
+const AUTH_SERVICE = process.env.AUTH_SERVICE_URL;
 export const healthCheck = async(req,res)=>{
     try {
         const response = await axios.get(`${AUTH_SERVICE}/health`); 

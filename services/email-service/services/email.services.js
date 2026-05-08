@@ -1,10 +1,13 @@
 import { transporter } from "../utils/mailer.js";
 
-export const sendMail =  async(to, subject,html)=>{
-    await transporter.sendMail({
+export const sendMail = (to, subject, html) => {
+  transporter
+    .sendMail({
       from: `"SkillSwap" <${process.env.EMAIL_USER}>`,
       to,
       subject,
-      html
-    });
-}
+      html,
+    })
+    .then(() => console.log("Email Sent"))
+    .catch((err) => console.log("Mail Error:", err));
+};

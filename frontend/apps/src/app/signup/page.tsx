@@ -54,14 +54,17 @@ export default function SignUp() {
 			return;
 		}
 		try{
+      console.log("Enter inside the signup ")
 			const res = await signupUser({
         		email: formData.email,
         		password: formData.password,
         		dateofbirth: formData.dateofbirth,
       	});
+        console.log("Signup response ",res);
 		localStorage.setItem("verify-email",formData.email);
 		toast.success("Account created! Verify Email.");
 		router.push("/verify-email");
+    console.log("end to handle submit");
 		}catch(error) {
 			console.log("in sign up ",error)
 			toast.error("Signup failed");
